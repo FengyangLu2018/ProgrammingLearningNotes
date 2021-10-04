@@ -1,2 +1,4 @@
 # 不排除.gitignore:
 !.gitignore
+# 排除test.html
+test.html

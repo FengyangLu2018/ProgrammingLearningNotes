@@ -104,45 +104,45 @@ a.z = 50;
 ## 简单数据类型
 ### 数据类型
 1. 数值型Number
-- isNaN()可以判断变量是否是数值型，非数值型返回true
-- 010表示八进制，0x10表示十六进制
-- Number.MAX_VALUE、Number.MIN_VALUE，表示数字型的最大值和最小值
-- Infinity、-Infinity表示无穷大、无穷小
+- `isNaN()`可以判断变量是否是数值型，非数值型返回true
+- `010`表示八进制，`0x10`表示十六进制
+- `Number.MAX_VALUE`、`Number.MIN_VALUE`，表示数字型的最大值和最小值
+- `Infinity`、`-Infinity`表示无穷大、无穷小
 2. 布尔型Boolean
-- 布尔型和数值型相加时，true的值为1，false的值为0
+- 布尔型和数值型相加时，`true`的值为1，`false`的值为0
 3. 字符串型String
 - 引号嵌套：外双内单或外单内双
 - 转义符：
-   - \n  换行
-   - \\  反斜杠
-   - \'  单引号
-   - \"  双引号
-   - \t  tab缩进
-   - \b  空格
-- str.length获取字符串长度
+   - `\n`  换行
+   - `\\`  反斜杠
+   - `\'`  单引号
+   - `\"`  双引号
+   - `\t`  tab缩进
+   - `\b`  空格
+- `str.length`获取字符串长度
 - 字符串拼接，数值相加字符相连
 4. 未定义型Undefined
 - 与字符串相加，拼接字符串
-- 与数字相加，返回NaN
+- 与数字相加，返回`NaN`
 5. 空值型Null
 - 与字符串相加，拼接字符串
 - 与数字相加，返回原数，这个变量在计算中相当于0
 
 ### 获取变量数据类型
-- typeof variable获取变量数据类型
+- `typeof variable`获取变量数据类型
 
 ### 数据类型转换
 1. 转换为字符串型
-- toString()  num.toString()
-- String()  String(num) 强制转换
-- 加号拼接字符串  num + '' 隐式转换
+- `toString()`  `num.toString()`
+- `String()`  `String(num)` 强制转换
+- 加号拼接字符串  `num + ''` 隐式转换
 2. 转换为数字型
-- parseInt(string)     转为整数		
-- parseFloat(string)   转为浮点数		
-- Number()             强制转换
-- \- \* /              隐式转换		
+- `parseInt(string)`     转为整数		
+- `parseFloat(string)`   转为浮点数		
+- `Number()`             强制转换
+- `- * /`              隐式转换		
 2. 转换为布尔型
-- Boolean()函数
+- `Boolean()`函数
 
 ### 使用示例
 ```
@@ -295,18 +295,18 @@ console.log(Boolean('a'))						//true
 ```
 ## 运算符
 ### 算术运算符
-\+ \- \* / %
+- `+ - * / %`
 ### 递增递减运算符
 - 前置，先自增自减后返回
 - 后置，先返回后自增自减
 
 ### 比较运算符(关系运算符)
-- \> \>= < <=
-- == != 只要求值相等
-- === !== 要求值和类型都相等
+- `> >= < <=`
+- `== !=` 只要求值相等
+- `=== !==` 要求值和类型都相等
 
 ### 逻辑运算符
-1. && || ！
+1. `&& || ！`
 2. 短路运算
 - 逻辑与
    - 表达式1为真，返回表达式2
@@ -316,9 +316,9 @@ console.log(Boolean('a'))						//true
    - 表达式1为假，返回表达式2
 
 ### 赋值运算符
-= += -= *= %= /=
+`= += -= *= %= /=`
 ### 运算符优先级
-小括号 > 一元运算符(++ -- !) > 算数运算符(先/*%后+-) > 关系运算符(> >= < <=) > 相等运算符(== != === !==) > 逻辑运算符(先&&后||) > 赋值运算符(=) > 逗号运算符(,)
+小括号 > 一元运算符(`++ -- !`) > 算数运算符(先`/ * %`后`+ -`) > 关系运算符(`> >= < <=`) > 相等运算符(`== != === !==`) > 逻辑运算符(先`&&`后`||`) > 赋值运算符(`=`) > 逗号运算符(`,`)
 ### 使用示例
 ```
 var a = 123 && 456;
@@ -333,49 +333,49 @@ console.log(d);									//123
 ## 流程控制
 1. 顺序结构
 2. 分支结构
-- if(条件表达式1){执行语句1}else if(条件表达式2){执行语句2}else{执行语句3}
-- switch case 表达式和value值必须是全等才匹配
-- 三元表达式  条件表达式 ？ 执行语句1 : 执行语句2;
+- `if(条件表达式1){执行语句1}else if(条件表达式2){执行语句2}else{执行语句3}`
+- `switch case` 表达式和value值必须是全等才匹配
+- 三元表达式  `条件表达式 ？ 执行语句1 : 执行语句2;`
 3. 循环结构
-- for(初始化变量;条件表达式;操作表达式){循环体}
-- while(条件表达式){循环体}
-- do{循环体}while(条件表达式)
-- continue跳出本次循环，开始执行下一次循环；break跳出循环，不再执行循环
+- `for(初始化变量;条件表达式;操作表达式){循环体}`
+- `while(条件表达式){循环体}`
+- `do{循环体}while(条件表达式)`
+- `continue`跳出本次循环，开始执行下一次循环；`break`跳出循环，不再执行循环
 
 ## 复杂数据类型
 ### 数组
 1. 创建数组
-- var arr = new Array();
-- var arr = [1, 2, 'js', true];
+- `var arr = new Array();`
+- `var arr = [1, 2, 'js', true];`
 2. 获取数组元素
-- 数组名[索引号]，例如arr[0]
+- 数组名[索引号]，例如`arr[0]`
 - 索引号从0开始
 3. 获取数组长度
-- arr.length
+- `arr.length`
 4. 数组新增元素
-- arr.length += n; 增加n个元素，元素是undefined
-- arr[arr.length] = value; 增加一个元素，值为value
+- `arr.length += n;` 增加n个元素，元素是`undefined`
+- `arr[arr.length] = value;` 增加一个元素，值为`value`
 
 ### 函数
 1. 用法
 - 声明
-   - function 函数名(形参1,形参2,...){函数体}
-   - var 变量名 = function(形参1,形参2,...){函数体}，称为匿名函数
+   - `function 函数名(形参1,形参2,...){函数体}`
+   - `var 变量名 = function(形参1,形参2,...){函数体}`，称为匿名函数
 - 调用
-   - 函数名(实参1,实参2,...);
-   - 变量名(实参1,实参2,...);
+   - `函数名(实参1,实参2,...);`
+   - `变量名(实参1,实参2,...);`
 - 形参
    - 形参和实参不匹配的问题
       - 如果实参个数多于形参，会取形参个数的实参
-      - 如果实参个数少于形参，多余的形参会是undefined
-   - arguments的使用：arguments是当前函数的一个内置对象，存储了传递的所有实参，是一个伪数组
-	  - 具有数组的length属性
+      - 如果实参个数少于形参，多余的形参会是`undefined`
+   - `arguments`的使用：`arguments`是当前函数的一个内置对象，存储了传递的所有实参，是一个伪数组
+	  - 具有数组的`length`属性
       - 按索引方式存储
-      - 没有真正数组的一些方法，例如pop(),push()
+      - 没有真正数组的一些方法，例如`pop()`,`push()`
 2. 返回值
-- return会终止函数
-- return只能返回一个值，可以通过返回数组返回多个值
-- 如果没有return语句，则返回undefined
+- `return`会终止函数
+- `return`只能返回一个值，可以通过返回数组返回多个值
+- 如果没有`return`语句，则返回`undefined`
 3. 函数预解析(函数提升)
 - 把所有函数声明提升到当前作用域最前面
 
@@ -411,9 +411,9 @@ console.log(d);									//123
 	new 构造函数名();
 	```
 - 注意：
-   - 构造函数不需要return语句，返回一个对象
-   - 使用构造函数必须加new
-   - 属性和方法前面必须添加this
+   - 构造函数不需要`return`语句，返回一个对象
+   - 使用构造函数必须加`new`
+   - 属性和方法前面必须添加`this`
 2. 使用对象
 - 使用属性
    ```
@@ -513,179 +513,232 @@ obj3.sayHi();
 
 ## 内置对象
 ### Math对象
-不是一个构造函数，不需要new创建对象，直接使用
+不是一个构造函数，不需要`new`创建对象，直接使用
 1. Math.PI
 - 一个属性，圆周率
 2. Math.max() Math.min()
 - 方法，求最大值(最小值)
-- 输入参数为一组数字，可以是数组，也可以是数组和数字的组合
-- 如果参数有非数字，返回NaN
-- 如果没有参数，返回-Infinity
-3. Math.abs()
+- 输入参数为一组数字
+- 如果参数有非数字，返回`NaN`
+- 如果没有参数，返回`-Infinity`和`Infinity`
+1. Math.abs()
 - 方法，求绝对值
 - 有隐式转换，可以将字符串数字转为数字
-- 如果是其他字符串，返回NaN
+- 如果是其他字符串，返回`NaN`
 4. Math.floor()
 - 向下取整
-5. Math.cell()
+5. Math.ceil()
 - 向上取整
 6. Math.round()
-- 四舍五入，-3.5结果是-3
+- 四舍五入，`-3.5`结果是`-3`
 7. Math.random()
-- 返回一个随机的[0, 1)之间的小数
+- 返回一个随机的`[0, 1)`之间的小数
 
 ### Date对象
 1. 构造函数，必须new创建对象后使用 var date = new Date(); 
 - 如果没有参数，返回当前时间
 - 参数常用的写法
-   - 数字型 var date1 = new Date(2019,10,01) 创建的日期是2019-11-1，比输入的月份大1
-   - 字符串型 var date1 = new Date('2019-10-1 8:8:8')
+   - 数字型 `var date1 = new Date(2019,10,01)` 创建的日期是`2019-11-1`，比输入的月份大1
+   - 字符串型 `var date1 = new Date('2019-10-1 8:8:8')`
 2. 日期格式化
-- date.getFullYear()返回年
-- date.getMonth()返回月，0~11，得到的月份比实际小一个月
-- date.getDate()返回的是几号
-- date.getDay()返回周几，周日是0
-- date.getHours()返回当前小时
-- date.getMinutes()返回当前分钟
-- date.getSeconds()返回当前秒
+- `date.getFullYear()`返回年
+- `date.getMonth()`返回月，0~11，得到的月份比实际小一个月
+- `date.getDate()`返回的是几号
+- `date.getDay()`返回周几，周日是0
+- `date.getHours()`返回当前小时
+- `date.getMinutes()`返回当前分钟
+- `date.getSeconds()`返回当前秒
 3. 获取时间戳，即当前时间距1970-01-01过去的毫秒数
-- date.valueOf();
-- date.getTime();
-- var date1 = +new Date(); date1存储的就是过去的总毫秒数
-- Date.now() H5新增的方法，不需要实例化
+- `date.valueOf();`
+- `date.getTime();`
+- `var date1 = +new Date();` `date1`存储的就是过去的总毫秒数
+- `Date.now()` H5新增的方法，不需要实例化
 
 ### 数组对象
-	创建数组
-		1、字面量
-			var arr1 = [2, 3];
-		2、newArray
-			var arr1 = new Array(2); 数组长度为2，里面有两个空的数组元素
-			var arr1 = new Array(2, 3); 等价于var arr1 = [2, 3];
-	检测是否为数组
-		1、instanceof
-			console.log(arr instanceof Array);
-		2、Array.isArray ie9以上才支持
-			console.log(Array.isArray(arr));
-	添加删除元素
-		1、push()
-			在数组末尾添加一个或多个元素
-			arr.push(4); 添加一个元素
-			arr.push(4, 'pink'); 添加两个元素
-			返回值是新数组的长度
-		2、unshift()
-			在数组的开头添加元素
-			arr.unshift(4, 'purple');
-			返回值是新数组的长度
-		3、pop()
-			删除数组最后的一个元素
-			arr.pop()
-			返回值是删除的那个元素
-		4、shift()
-			删除数组第一个元素
-			arr.shift()
-			返回值是删除的那个元素
-	数组排序
-		1、reverse()
-			翻转数组
-			arr.reverse();
-		2、sort()
-			排序
-			默认排序
-				arr.sort()按第一位数字升序排序，第一位相同再按第二位，13会排在7前面
-			升序
-				arr.sort(function(a, b){
-					return a - b;
-				});
-			降序
-				arr.sort(function(a, b){
-					return b - a;
-				});
-	数组索引
-		1、indexOf
-			arr.indexOf('blue')
-				返回元素的索引号
-				如果有两个相同元素，只返回第一个满足条件的索引号
-				如果找不到匹配元素，返回-1
-		2、lastIndexOf
-			arr.lastIndexOf('blue')
-				从后往前查
-	数组转为字符串
-		1、toString()
-			arr.toString() 元素之间用逗号分隔
-		2、join(分隔符)
-			arr.join()  如果不写分隔符，默认用逗号
-	数组拼接截取
-		1、concat()
-			连接两个或多个数组 
-			不影响原数组
-			返回一个新的数组
-		2、slice(begin, end)
-			返回被截取项目的新数组，返回的数组是[begin: end)
-			不影响原数组
-		3、splice(begin, num)
-			删除从begin开始的num个元素
-			返回被删除元素组成的新数组
-			影响原数组
-			原数组减少了num个元素，新数组有num个元素
+1. 创建数组
+- 字面量
+  - `var arr1 = [2, 3];`
+- newArray
+  - `var arr1 = new Array(2);` 数组长度为2，里面有两个空的数组元素
+  - `var arr1 = new Array(2, 3);` 等价于`var arr1 = [2, 3]`;
+2. 检测是否为数组
+- instanceof
+  - `console.log(arr instanceof Array);`
+- Array.isArray ie9以上才支持
+  - `console.log(Array.isArray(arr));`
+3. 添加删除元素
+- push()
+  - 在数组末尾添加一个或多个元素
+    - `arr.push(4);` 添加一个元素
+    - `arr.push(4, 'pink');` 添加两个元素
+- 返回值是新数组的长度
+  - unshift()
+    - 在数组的开头添加元素
+      - `arr.unshift(4, 'purple');`
+  - 返回值是新数组的长度
+- pop()
+  - 删除数组最后的一个元素
+    - `arr.pop()`
+  - 返回值是删除的那个元素
+- shift()
+  - 删除数组第一个元素
+    - `arr.shift()`
+  - 返回值是删除的那个元素
+4. 数组排序
+- reverse()
+  - 翻转数组
+  - `arr.reverse();`
+- sort()
+  - 默认排序
+    - `arr.sort()`按第一位数字升序排序，第一位相同再按第二位，13会排在7前面
+  - 升序
+  	```
+	arr.sort(function(a, b){
+  		return a - b;
+  	});
+	```
+  - 降序
+```
+  	arr.sort(function(a, b){
+  		return b - a;
+  	});
+```
+5. 数组索引
+- indexOf
+  - `arr.indexOf('blue')`
+  - 返回元素的索引号
+  - 如果有两个相同元素，只返回第一个满足条件的索引号
+  - 如果找不到匹配元素，返回-1
+- lastIndexOf
+  - `arr.lastIndexOf('blue')`
+  - 从后往前查
+6. 数组转为字符串
+- toString()
+  - `arr.toString()` 元素之间用逗号分隔
+- join(分隔符)
+  - `arr.join()`  如果不写分隔符，默认用逗号
+7. 数组拼接截取
+- concat()
+  - 连接两个或多个数组 
+  - 不影响原数组
+  - 返回一个新的数组
+- slice(begin, end)
+  - 返回被截取项目的新数组，返回的数组是`[begin: end)`
+  - 不影响原数组
+- splice(begin, num)
+  - 删除从`begin`开始的`num`个元素
+  - 返回被删除元素组成的新数组
+  - 影响原数组
+  - 原数组减少了`num`个元素，新数组有`num`个元素
+
 ### 字符串对象
-	基本包装类型：
-		将简单数据类型包装成为了复杂类型，相当于以下三步
-			var temp = new String('andy');
-			str = temp;
-			temp = null;
-		基本包装类型包括Number, Boolean, String
-	不可变性
-		因为字符创的不可变性，不要大量拼接字符串
-	查找字符在字符串中索引
-		indexOf
-			str.indexOf('要查找的字符',[起始位置])
-			返回第一个匹配的位置
-		lastIndexOf
-			从后往前查
-	查找字符串中特定位置的字符
-		charAt
-			str.charAt(index)
-			返回特定位置的字符
-		charCodeAt(index)
-			返回特定位置字符的ascall码
-		str[index]
-			返回特定位置的字符
-			H5新增的，有兼容性问题
-	拼接、截取字符串
-		concat(str1, str2, ...)
-			相当于+
-		substr(start, length)
-			截取从start位置开始length个字符组成的子字符串
-		slice(start, end)
-			截取[start, end)子字符串
-		substring(start, end)
-			与slice相比，不能取负值
-	替换字符
-		str.replace('a','A')
-			只会替换查到的第一个匹配字符
-	字符串转为数组
-		str.split('分隔符')
-	大小写转换
-		str.toUpperCase()
-			转为大写
-		str.toLowerCase()
-			转为小写
+1. 基本包装类型：
+- 将简单数据类型包装成为了复杂类型，相当于以下三步
+```
+var temp = new String('andy');
+var str = temp;
+temp = null;
+```
+- 基本包装类型包括Number, Boolean, String
+2. 不可变性
+- 因为字符创的不可变性，不要大量拼接字符串
+3. 查找字符在字符串中索引
+- `indexOf`
+  - `str.indexOf('要查找的字符',[起始位置])`
+    - 返回第一个匹配的位置
+  - lastIndexOf
+    - 从后往前查
+4. 查找字符串中特定位置的字符
+- `charAt`
+  - `str.charAt(index)`
+  - 返回特定位置的字符
+- `charCodeAt(index)`
+  - 返回特定位置字符的ascall码
+- `str[index]`
+  - 返回特定位置的字符
+  - H5新增的，有兼容性问题
+5. 拼接、截取字符串
+- `concat(str1, str2, ...)`
+  - 相当于`+`
+- `substr(start, length)`
+  - 截取从`start`位置开始`length`个字符组成的子字符串
+- `slice(start, end)`
+  - 截取`[start, end)`子字符串
+- `substring(start, end)`
+  - 与`slice`相比，不能取负值
+6. 替换字符
+- `str.replace('a','A')`
+  - 只会替换查到的第一个匹配字符
+7. 字符串转为数组
+- `str.split('分隔符')`
+8. 大小写转换
+- `str.toUpperCase()`
+  - 转为大写
+- `str.toLowerCase()`
+  - 转为小写
+
 ### 数据存储
-- 简单数据类型(值类型)：string number boolean undefined null
-			var a = null;
-			console.log(typeof a);
-			输出是object
+- 简单数据类型(值类型)：
+  - string number boolean undefined null
+  - null的类型是对象
+```
+	var a = null;
+	console.log(typeof a);
+	输出是object
+```
 - 复杂数据类型(引用类型)：通过new关键字创建的对象(系统对象、自定义对象)，如Object、Array、Date等
 - 堆和栈
-   - 简单数据类型直接在栈里存放数据值：简单数据类型传参是值传递，函数里面对形参的操作不会影响实参的值
-   - 复杂数据类型首先在栈里存放地址，地址指向堆里的数据值：复杂数据类型传参是地址传递，函数里面对形参的操作会影响实参的值
+  - 简单数据类型直接在栈里存放数据值：简单数据类型传参是值传递，函数里面对形参的操作不会影响实参的值
+  - 复杂数据类型首先在栈里存放地址，地址指向堆里的数据值：复杂数据类型传参是地址传递，函数里面对形参的操作会影响实参的值
+
 ### 使用示例
 ```
-一、Math对象应用
-1、求两个整数之间的随机整数，并且包含这两个整数
+//一、Math对象应用
+//1. 查看Math.PI的值
+console.log(Math.PI)
+//输出3.141592653589793
+console.log('-------------------spliter-------------------');
+//2. 使用Math.max()、Math.min()方法
+console.log(Math.max());
+console.log(Math.max(0,1,2,3,4));
+console.log(Math.max([0,1,2,3,4]));
+console.log(Math.max(1,2,3,'red'));
+//输出为-Infinity 4 NaN NaN
+console.log(Math.min());
+console.log(Math.min(0,1,2,3,4));
+console.log(Math.min([0,1,2,3,4]));
+console.log(Math.min(1,2,3,'red'));
+//输出为Infinity 0 NaN NaN
+console.log('-------------------spliter-------------------');
+//3. 使用Math.abs()方法
+console.log(Math.abs('-100'));
+console.log(Math.abs('hello'));
+//输出为100 NaN
+console.log('-------------------spliter-------------------');
+//4. Math.floor()向下取整
+console.log(Math.floor(3.5));
+console.log(Math.floor(-3.5));
+console.log(Math.floor('3.5'));
+//输出为3 -4 3
+console.log('-------------------spliter-------------------');
+//5. Math.ceil()向上取整
+console.log(Math.ceil(3.5));
+console.log(Math.ceil(-3.5));
+//输出为4 -3
+console.log('-------------------spliter-------------------');
+//6. Math.round()四舍五入，`-3.5`结果是`-3`
+console.log(Math.round(3.5));
+console.log(Math.round(-3.5));
+//输出为4 -3
+console.log('-------------------spliter-------------------');
+//7. Math.random()返回一个随机的`[0, 1)`之间的小数
+console.log(Math.random());
+console.log('-------------------spliter-------------------');
+//8. 求两个整数之间的随机整数，并且包含这两个整数
 var max = 10;
 var min = 0;
 var result = Math.floor(Math.random()*(max-min+1)) + min;
+console.log(result);
 ```
 # 文档对象模型DOM
 # 浏览器对象模型BOM

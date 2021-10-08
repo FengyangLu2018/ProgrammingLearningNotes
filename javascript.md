@@ -933,263 +933,254 @@ console.log(str);
 console.log(str.toLowerCase());//转为小写
 //输出：hello, my name is lufengyang. 
 ```
+
 # 文档对象模型DOM
-API
-	应用程序编程接口
-WebAPI
-	浏览器API，DOM和BOM
-	https://developer.mozilla.org/zh-CN/docs/Web/API
-DOM
-	简介
-		文档对象模型，是W3C推荐的处理可扩展标记语言的标准编程接口
-	DOM树
-		document 页面
-		element  标签
-		node     标签、属性、文本、注释
-	获取元素
-		document.getElementByID('id名')
-			通过id获取元素
-			参数是字符串
-			返回的是元素对象
-		console.dir(obj)
-			查看对象的详细信息
-		document.getElementsByTagName('标签名')
-			通过标签名获取元素集合
-			参数是字符串
-			返回的是元素对象集合，以伪数组形式存储
-			可以指定父元素，限定搜索范围，父元素必须是指定的单个元素
-				var ul = document.getElementsByTagName('ul')[0]
-				lis = ul.getElementsByTagName('li')
-		H5新增的方法，要考虑兼容性
-			document.getElementsByClassName('类名')
-				通过类名获取元素集合
-			document.querySelector('选择器')
-				根据选择器获取元素，只返回匹配的第一个元素对象
-				var el = querySelector('.box');
-				var el = querySelector('#nav');
-				var el = querySelector('li');
-			document.querySelectorAll('选择器')
-				返回匹配的所有元素集合，以伪数组形式存储
-		document.body
-			获取body元素对象
-		document.documentElement
-			获取html对象
-	事件基础
-		事件源
-			触发对象，例如按钮
-				var btn = document.getElementById('btn');
-		事件类型
-			鼠标点击onclick
-			鼠标经过
-			键盘按下
-		事件处理程序
-			btn.onclick = function(){
-				
-			}
-	操作元素
-		获取元素属性值
-			element.属性
-				只能获取内置属性值
-			element.getAttribute('属性')
-				能获取内置属性和自定义属性
-			H5新增获取属性方法 
-				自定义属性规范：以data-开头，例如data-index,data-list-name
-				获取方法(ie11以上才兼容)：element.dataset.index, element.dataset.listName
-						element.dataset['index'], element.dataset['listName'],
-		修改元素内容
-			element.innerText = '修改内容';
-			element.innerHTML = '<strong>修改</strong>内容';
-			这两个元素都是可读写的
-			innerHTML可以识别标签，保留空格和换行
-		修改元素属性
-			常见内置属性
-				可以先通过console.dir(obj)查看元素有哪些属性
-				img.src img.title
-				input.type value checked disabled
-			element.属性 = 属性值
-				修改内置属性属性值
-				element.className = 'red';
-			element.setAttribute('属性', '值')
-				既能修改内置属性也能修改自定义属性
-				element.setAttribute('class', 'red');
-		移除属性
-			element.removeAttribute('index');
-		修改元素样式
-			element.style 行内样式操作 
-				backgroundColor width
-			element.className 类名样式操作
-				1、先在css中声明一个类及其样式
-					.类名{
-						color: pink;
-						width: 100px;
-					}
-				2、this.className = '类名'
-				注意：
-					新增的类名是覆盖元素原来的类名的，可以通过this.className = '旧类名 新类名'定义多类名
-	节点操作
-		节点概述
-			nodeType
-				元素节点为1
-				属性节点为2
-				文本节点为3(包含文字、空格、换行等)
-			nodeName
-			nodeValue
-		节点层级
-			parentNode
-				element.parentNode 离得最近的父级节点
-				如果没有父节点，返回null
-			childNode
-				element.childNode 获取所有的子节点，可以通过nodeType筛选出元素节点
-				element.children 只读，只返回所有的子元素节点
-				element.firstChild 第一个子节点，不管是文本节点还是元素节点
-				element.lastChild
-				element.firstElementChild 第一个元素节点 IE9以上支持
-				element.lastElementChild 最后一个元素节点
-			兄弟节点
-				nextSibling返回当前元素的下一个兄弟节点，包括元素和文本，找不到返回null
-				previousSibling返回当前元素的上一个兄弟节点
-				nextElementSibling下一个兄弟元素节点，ie9以上可用
-				previousElementSibling上一个兄弟元素节点
-		创建添加节点
-			创建节点
-				document.createElement('tagName')
-				示例
-					var li = document.createElement('li')
-			添加节点
-				node.appendChild(child)
-				示例
-					var ul = document.querySelector('ul')
-					ul.appendChild(li)添加的节点在最后
-				node.insertBefore(child, 指定元素)
-					在指定的子节点前添加节点
-				示例
-					var lili = document.createElement('li')
-					ul.insertBefore(lili, ul.children[0]);
-		删除节点
-			node.removeChild(child) 返回值是删除的节点
-			示例
-				ul.removeChild(ul.children[0])
-		复制节点
-			node.cloneNode()
-				如果参数为空或false，浅拷贝，只复制标签不复制内容
-				参数设为true，深拷贝，既复制标签也复制内容
-			示例
-				var lili = ul.children[0].cloneNode(true);
-				ul.appendChild(lili);
-	三种动态创建元素的方法
-		document.write()
-			示例
-				document.write('<div>123</div>')
-			将内容写入页面的内容流，但是文档流执行完毕后它会导致页面全部重绘，导致其它页面元素消失
-		innerHTML
-			示例
-				div.innerHTML = '<div>123</div>';
-		document.createElement('tagName')
-		注意：
-			生成很多标签时，采用innerHTML拼接字符串的方法效率最低，采用数组拼接效率最高；采用createElement效率介于两者中间。
-	事件
-		注册事件
-			传统方式
-				btn.onclick = function(){}
-				注册事件的唯一性：如果一个事件绑定两个处理函数，后一个会将前一个覆盖
-			方法监听方式
-				eventTarget.addEventListener(type, listener[, useCapture])  
-					eventTarget：目标对象
-					type：事件类型字符串，click、mouseover，不带on
-					listener：事件处理函数，事件发生时会调用该监听函数
-					useCapture：可选参数，是一个布尔值，默认是false
-				示例
-					btn.addEventListener('click', function(){
-						alert('hi');
-					})
-				同一个元素的同一个事件可以绑定多个处理函数
-				ie9之前用attachEvent()代替 eventTarget.attachEvent(eventNameWithOn, callback)
-					eventNameWithOn：事件类型字符串，onclick、onmouseover，带on
-					callback：事件处理函数
-		删除事件(解绑事件)
-			传统方式
-				btn.onclick = null;
-			方法监听方式
-				eventTarget.removeEventListener(type, listener[, useCapture])
-				eventTarget.detachEvent(eventNameWithOn, callback)
-				考虑到删除，注册事件时不要用匿名函数
-		DOM事件流
-			捕获阶段 
-				捕获的顺序是document -> html -> body -> father -> son，如果上述元素都注册了事件，则从上往下触发
-				注册捕获阶段事件eventTarget.removeEventListener(type, listener, true)
-				js只能监听捕获、冒泡的一种，不可以都捕获
-			当前目标阶段
-			冒泡阶段
-				冒泡的顺序与捕获完全相反
-				注册冒泡事件eventTarget.removeEventListener(type, listener, false)
-				实际开发中更关注事件冒泡
-				有些事件没有冒泡，例如onblur、onfocus、onmouseenter、onmouseleave
-		事件对象
-			定义：
-				event是一个事件对象，写在监听函数的形参位置
-				事件对象只有有了事件才会存在，是系统创建的
-				事件对象是有关事件的一系列数据的集合，比如鼠标点击事件对象包含了鼠标坐标等信息，键盘事件包含了按下了哪个按键等信息
-				可以自己命名，不一定非得叫event，例如evt、e
-				ie6、7、8需要通过window.event获取事件对象，兼容写法：e = e || window.event
-			常见事件对象属性和方法：
-				e.target 触发事件的对象，this是绑定事件的对象
-				e.currentTarget 与this相似
-				e.type 返回事件类型 click、mouseover、mouseout
-				阻止默认行为，如链接跳转
-					 e.preventDefault() 可用于事件监听注册方式，也可用于传统注册方式，有兼容性问题
-					 e.returnValue 只限于传统注册方式，用于低版本浏览器 
-					 return false 只限于传统的注册方式，没有兼容性问题
-		阻止事件冒泡
-			标准写法，考虑兼容性
-				if(e && e.stopPropagation){
-				 e.stopPropagation();
-				}else{
-				 window.event.cancelBubble = true;
-				}
-		事件委托(代理、委派)
-			原理
-				不是每个子节点单独设置事件监听器，而是事件监听器设置在其父节点上，然后利用冒泡原理影响设置每一个子节点
-			作用
-				只操作一次DOM，提高了程序的性能
-		常用的鼠标事件
-			onclick            左键点击触发
-			onmouseover        鼠标经过触发
-			onmouseout         鼠标离开触发
-			onfocus            获得鼠标焦点触发
-			onblur             失去鼠标焦点触发
-			onmousemove        鼠标移动触发
-			onmouseup          鼠标弹起触发
-			onmousedown        鼠标按下触发
-			禁止鼠标右键弹出菜单
-				contextmenu主要控制应该何时显示上下文菜单，主要用于程序员取消默认的上下文菜单
-				用法
-				 document.addEventListener('contextmenu', function(e){
-				  e.preventDefault();
-				 })
-			禁止鼠标选中
-				selectstart开始选中
-				用法
-				 document.addEventListener('selectstart', function(e){
-				  e.preventDefault();
-				 })
-		鼠标事件对象MouseEvent
-			e.clientX          返回鼠标相对于浏览器窗口可视区的x坐标
-			e.clientY          返回鼠标相对于浏览器窗口可视区的y坐标
-			e.pageX            返回鼠标相对于文档页面的x坐标 ie9+支持
-			e.pageY            返回鼠标相对于文档页面的y坐标 ie9+支持
-			e.screenX          返回鼠标相对于电脑屏幕的x坐标
-			e.screenY          返回鼠标相对于电脑屏幕的y坐标
-		常用的键盘事件
-			onkeyup            某个键盘按键被松开时触发
-			onkeydown          某个键盘按键被按下时触发
-			onkeypress         某个键盘按键被按下时触发，但不识别功能键，如ctrl shift 上下左右键
-			三个事件的执行顺序 down press up
-			keydown和keypress在文本框里的特点：事件触发的时候，文字还没有落入文本框中；keyup事件触发的时候文字已经落入文本框
-			input.focus()可以使input元素获取焦点
-		键盘事件对象
-			e.keyCode          相应键的ascall码值，
-							   keyup和keydown事件不区分字母的大小写，a和A都得到65
-			                   keypress区分大小写，a：97，A：65
+## 概述
+- 文档对象模型，是W3C推荐的处理可扩展标记语言的标准编程接口
+- DOM树
+  - document 文档(页面)
+  - element 元素(标签)
+  - node 节点(标签、属性、文本、注释)
+
+## 元素操作
+### 获取元素
+0. console.dir(obj) 查看对象的详细信息
+1. document.getElementByID('id名')
+- 通过id获取元素
+- 参数是字符串
+- 返回的是元素对象
+2. document.getElementsByTagName('标签名')
+- 通过标签名获取元素集合
+- 参数是字符串
+- 返回的是元素对象集合，以伪数组形式存储
+- 可以指定父元素，限定搜索范围，父元素必须是指定的单个元素
+```
+var ul = document.getElementsByTagName('ul')[0];
+lis = ul.getElementsByTagName('li');
+```
+3. document.getElementsByClassName('类名')
+- H5新增的方法，要考虑兼容性
+- 通过类名获取元素集合
+4. document.querySelector('选择器')
+- H5新增的方法，要考虑兼容性
+- 根据选择器获取元素，只返回匹配的第一个元素对象
+```
+var el = querySelector('.box');
+var el = querySelector('#nav');
+var el = querySelector('li');
+```
+5. document.querySelectorAll('选择器')
+- H5新增的方法，要考虑兼容性
+- 返回匹配的所有元素集合，以伪数组形式存储
+6. document.body 获取body元素对象
+7. document.documentElement 获取html对象
+
+### 操作元素
+1. 获取元素属性值
+- element.属性 只能获取内置属性值
+- element.getAttribute('属性') 能获取内置属性和自定义属性
+- H5新增获取属性方法 
+  - 自定义属性规范：以data-开头，例如data-index,data-list-name
+  - 获取方法(ie11以上才兼容)：element.dataset.index, element.dataset.listName, element.dataset['index'], element.dataset['listName']
+2. 修改元素内容
+- element.innerText = '修改内容';
+- element.innerHTML = '<strong>修改</strong>内容';
+- 这两个元素都是可读写的，区别在于innerHTML可以识别标签，保留空格和换行
+3. 修改元素属性
+- 常见内置属性
+  - img.src img.title
+  - input.type value checked disabled
+- element.属性 = 属性值 修改内置属性属性值，`element.className = 'red';`
+- element.setAttribute('属性', '值') 既能修改内置属性也能修改自定义属性，`element.setAttribute('class', 'red');`
+4. 移除属性
+- element.removeAttribute('index');
+5. 修改元素样式
+- element.style 行内样式操作 backgroundColor width
+- element.className 类名样式操作
+```
+//1、先在css中声明一个类及其样式
+.类名{
+	color: pink;
+	width: 100px;
+}
+//2、让元素类名等于第一步中定义的类，新增的类名是覆盖元素原来的类名的，可以通过this.className = '旧类名 新类名'定义多类名
+this.className = '旧类名 新类名';
+```
+
+## 节点操作
+### 节点属性
+- nodeType 元素节点为1，属性节点为2，文本节点为3(包含文字、空格、换行等)
+- nodeName
+- nodeValue
+
+### 获取节点
+1. parentNode
+- element.parentNode 离得最近的父级节点
+- 如果没有父节点，返回null
+2. childNode
+- element.childNode 获取所有的子节点，可以通过nodeType筛选出元素节点
+- element.children 只读，只返回所有的子元素节点
+- element.firstChild 第一个子节点，不管是文本节点还是元素节点
+- element.lastChild
+- element.firstElementChild 第一个元素节点 IE9以上支持
+- element.lastElementChild 最后一个元素节点
+3. 兄弟节点
+- nextSibling 返回当前元素的下一个兄弟节点，包括元素和文本，找不到返回null
+- previousSibling 返回当前元素的上一个兄弟节点
+- nextElementSibling 下一个兄弟元素节点，ie9以上可用
+- previousElementSibling 上一个兄弟元素节点
+
+### 操作节点
+1. 创建节点 document.createElement('tagName')，
+- 示例`var li = document.createElement('li');`
+2. 添加节点 
+- node.appendChild(child) 添加的节点在最后
+```
+var ul = document.querySelector('ul')
+ul.appendChild(li)
+```
+- node.insertBefore(child, 指定元素) 在指定的子节点前添加节点
+```
+var lili = document.createElement('li');
+ul.insertBefore(lili, ul.children[0]);	
+```
+3. 删除节点 node.removeChild(child) 
+- 返回值是删除的节点
+- 示例`ul.removeChild(ul.children[0])`
+
+4. 复制节点 node.cloneNode()
+- 如果参数为空或false，浅拷贝，只复制标签不复制内容
+- 参数设为true，深拷贝，既复制标签也复制内容
+- 示例
+```
+var lili = ul.children[0].cloneNode(true);
+ul.appendChild(lili);
+```
+
+### 三种动态创建元素的方法对比
+1. document.write()
+- 示例 `document.write('<div>123</div>');`
+- 将内容写入页面的内容流，但是文档流执行完毕后它会导致页面全部重绘，导致其它页面元素消失
+2. innerHTML
+  - 示例`div.innerHTML = '<div>123</div>';`
+3. document.createElement('tagName')
+4. 注意：生成很多标签时，采用innerHTML拼接字符串的方法效率最低，采用数组拼接效率最高；采用createElement效率介于两者中间。
+
+## 事件
+### 常用事件
+1. 常用的鼠标事件
+- onclick            左键点击触发
+- onmouseover        鼠标经过触发
+- onmouseout         鼠标离开触发
+- onfocus            获得鼠标焦点触发
+- onblur             失去鼠标焦点触发
+- onmousemove        鼠标移动触发
+- onmouseup          鼠标弹起触发
+- onmousedown        鼠标按下触发
+2. 常用的键盘事件
+- onkeyup            某个键盘按键被松开时触发
+- onkeydown          某个键盘按键被按下时触发
+- onkeypress         某个键盘按键被按下时触发，但不识别功能键，如ctrl shift 上下左右键
+- 三个事件的执行顺序 down press up
+- keydown和keypress在文本框里的特点：keydown事件触发的时候，文字还没有落入文本框中；keyup事件触发的时候文字已经落入文本框
+
+### 注册事件
+1. 传统方式
+- btn.onclick = function(){}
+- 注册事件的唯一性：如果一个事件绑定两个处理函数，后一个会将前一个覆盖
+2. 方法监听方式
+- eventTarget.addEventListener(type, listener[, useCapture])  
+  - eventTarget：目标对象
+  - type：事件类型字符串，click、mouseover，不带on
+  - listener：事件处理函数，事件发生时会调用该监听函数
+  - useCapture：可选参数，是一个布尔值，默认是false
+  - 同一个元素的同一个事件可以绑定多个处理函数
+  - ie9之前用attachEvent()代替 eventTarget.attachEvent(eventNameWithOn, callback)
+    - eventNameWithOn：事件类型字符串，onclick、onmouseover，带on
+    - callback：事件处理函数
+- 示例
+```
+btn.addEventListener('click', function(){
+	alert('hi');
+})
+```
+	
+### 删除事件(解绑事件)
+1. 传统方式 
+- btn.onclick = null;
+2. 方法监听方式
+- eventTarget.removeEventListener(type, listener[, useCapture])
+- eventTarget.detachEvent(eventNameWithOn, callback)
+- 考虑到删除，注册事件时不要用匿名函数
+
+### DOM事件流
+1. 捕获阶段 
+- 捕获的顺序是document -> html -> body -> father -> son，如果上述元素都注册了事件，则从上往下触发
+- 注册捕获阶段事件eventTarget.addEventListener(type, listener, true)
+- js只能监听捕获、冒泡的一种，不可以都捕获
+2. 当前目标阶段
+3. 冒泡阶段
+- 冒泡的顺序与捕获完全相反
+- 注册冒泡事件eventTarget.addEventListener(type, listener, false)
+- 实际开发中更关注事件冒泡
+- 有些事件没有冒泡，例如onblur、onfocus、onmouseenter、onmouseleave
+4. 阻止事件冒泡
+- 标准写法，考虑兼容性
+```
+if(e && e.stopPropagation){
+ e.stopPropagation();
+}else{
+ window.event.cancelBubble = true;
+}
+```
+
+### 事件对象
+1. 定义：
+- event是一个事件对象，写在监听函数的形参位置
+- 事件对象只有有了事件才会存在，是系统创建的
+- 事件对象是有关事件的一系列数据的集合，比如鼠标点击事件对象包含了鼠标坐标等信息，键盘事件包含了按下了哪个按键等信息
+- 可以自己命名，不一定非得叫event，例如evt、e
+- ie6、7、8需要通过window.event获取事件对象，兼容写法：`e = e || window.event`
+2. 常见事件对象属性和方法：
+- e.target 触发事件的对象，this是绑定事件的对象
+- e.currentTarget 与this相似
+- e.type 返回事件类型 click、mouseover、mouseout
+- 阻止默认行为，如链接跳转
+  - e.preventDefault() 可用于事件监听注册方式，也可用于传统注册方式，有兼容性问题
+```
+1、禁止鼠标右键弹出菜单
+//contextmenu主要控制应该何时显示上下文菜单，主要用于程序员取消默认的上下文菜单
+document.addEventListener('contextmenu', function(e){
+	  e.preventDefault();
+	 })
+
+2、禁止鼠标选中
+//selectstart开始选中
+document.addEventListener('selectstart', function(e){
+	e.preventDefault();
+	})
+```
+  - e.returnValue 只限于传统注册方式，用于低版本浏览器 
+  - return false 只限于传统的注册方式，没有兼容性问题
+3. 事件委托(代理、委派)
+- 原理：不是每个子节点单独设置事件监听器，而是事件监听器设置在其父节点上，然后利用冒泡原理影响设置每一个子节点
+- 作用：只操作一次DOM，提高了程序的性能
+4. 鼠标事件对象MouseEvent
+- e.clientX          返回鼠标相对于浏览器窗口可视区的x坐标
+- e.clientY          返回鼠标相对于浏览器窗口可视区的y坐标
+- e.pageX            返回鼠标相对于文档页面的x坐标 ie9+支持
+- e.pageY            返回鼠标相对于文档页面的y坐标 ie9+支持
+- e.screenX          返回鼠标相对于电脑屏幕的x坐标
+- e.screenY          返回鼠标相对于电脑屏幕的y坐标
+5. 键盘事件对象
+- e.keyCode          相应键的ascall码值，keyup和keydown事件不区分字母的大小写，a和A都得到65;keypress区分大小写，a：97，A：65
+
+
+
+
+		
+	
+
 
 # 浏览器对象模型BOM
 BOM概述
@@ -1280,4 +1271,5 @@ history对象
 		history.go(参数)                前进后退功能，参数如果是1前进一个页面，参数如果是-1后退一个页面
 
 # 查阅文档
-	MDN：https://developer.mozilla.org/zh-CN/
+- MDN：https://developer.mozilla.org/zh-CN/
+- WebAPI：浏览器API，DOM和BOM https://developer.mozilla.org/zh-CN/docs/Web/API

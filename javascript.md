@@ -991,12 +991,6 @@ var el = querySelector('li');
   - img.src img.title
   - input.type value checked disabled
 - element.属性 = 属性值 修改内置属性属性值，`element.className = 'red';`
-- element.setAttribute('属性', '值') 既能修改内置属性也能修改自定义属性，`element.setAttribute('class', 'red');`
-4. 移除属性
-- element.removeAttribute('index');
-5. 修改元素样式
-- element.style 行内样式操作 backgroundColor width
-- element.className 类名样式操作
 ```
 //1、先在css中声明一个类及其样式
 .类名{
@@ -1006,6 +1000,13 @@ var el = querySelector('li');
 //2、让元素类名等于第一步中定义的类，新增的类名是覆盖元素原来的类名的，可以通过this.className = '旧类名 新类名'定义多类名
 this.className = '旧类名 新类名';
 ```
+- element.setAttribute('属性', '值') 既能修改内置属性也能修改自定义属性，`element.setAttribute('class', 'red');`
+4. 移除属性
+- element.removeAttribute('index');
+5. 修改元素样式
+- element.style 行内样式操作 backgroundColor width
+- element.className 类名样式操作
+
 
 ## 节点操作
 ### 节点属性
@@ -1062,7 +1063,7 @@ ul.appendChild(lili);
 - 示例 `document.write('<div>123</div>');`
 - 将内容写入页面的内容流，但是文档流执行完毕后它会导致页面全部重绘，导致其它页面元素消失
 2. innerHTML
-  - 示例`div.innerHTML = '<div>123</div>';`
+- 示例`div.innerHTML = '<div>123</div>';`
 3. document.createElement('tagName')
 4. 注意：生成很多标签时，采用innerHTML拼接字符串的方法效率最低，采用数组拼接效率最高；采用createElement效率介于两者中间。
 
@@ -1077,6 +1078,9 @@ ul.appendChild(lili);
 - onmousemove        鼠标移动触发
 - onmouseup          鼠标弹起触发
 - onmousedown        鼠标按下触发
+- mouseover和mouseenter的区别
+  - mouseover/mouseout向上冒泡：假如给父盒子添加mouseover事件，鼠标经过父盒子会触发，鼠标经过子盒子也会触发，这是由于子盒子没有监听，会将事件向上冒泡，触发父盒子的mouseover事件
+  - mouseenter/mouseleave不冒泡：经过子盒子，即使子盒子没有监听，也不会触发父盒子的鼠标经过事件
 2. 常用的键盘事件
 - onkeyup            某个键盘按键被松开时触发
 - onkeydown          某个键盘按键被按下时触发
@@ -1153,7 +1157,6 @@ if(e && e.stopPropagation){
 document.addEventListener('contextmenu', function(e){
 	  e.preventDefault();
 	 })
-
 2、禁止鼠标选中
 //selectstart开始选中
 document.addEventListener('selectstart', function(e){
@@ -1175,101 +1178,746 @@ document.addEventListener('selectstart', function(e){
 5. 键盘事件对象
 - e.keyCode          相应键的ascall码值，keyup和keydown事件不区分字母的大小写，a和A都得到65;keypress区分大小写，a：97，A：65
 
-
-
-
-		
-	
-
-
 # 浏览器对象模型BOM
-BOM概述
-	标准
-		javascript语法的标准化组织是ECMA
-		DOM的标准化组织是W3C
-		BOM最初是Netscape浏览器标准的一部分，兼容性比较差，DOM包含在BOM里面
-	BOM的构成
-		window对象是浏览器的顶级对象，它具有双重角色
-			它是js访问浏览器窗口的一个接口
-			它是一个全局对象，定义在全局作用域中的变量、函数会变成window对象的属性和方法，在调用时可以省略window，如alert()、prompt()等，window.name是window的内置属性，所以其它变量不要使用name这个名字
-window对象的常见事件
-	窗口加载事件		
-		页面全部加载完毕才执行，这样就可以将js代码放到上方
-		传统注册方式：
-			window.onload = function(){
-				
-			}
-			只能写一次，如果写多次，只有最后一个生效，前面的被覆盖
-		添加监听事件方式：
-			window.addEventListener('load', function(){
-				
-			})
-		DOM加载事件
-			document.addEventListener('DOMContentLoaded', function(){
-				
-			})
-			DOM加载完成触发(不包括样式表、图片、flash等)，ie9以上支持
-			用于图片很多的站，图片未加载完也可以有交互效果
-	调整窗口大小事件
-		只要浏览器大小发生变化就触发
-		window.resize = fuction(){}
-		window.addEventListener('resize', function(){})
-	定时器
-		window.setTimeout(调用函数, [延迟的毫秒数]);
-			函数仅执行一次，类似定时炸弹
-			经常给定时器取个名字区分不同的定时器
-				var timer1 = setTimeout(callback1, 2000);
-				var timer2 = setTimeout(callback2, 5000);
-			window.clearTimeout(timeoutId);
-				clearTimeout(timer1);
-		window.setInterval(callback, [间隔的毫秒数]);
-			函数可以执行很多次，类似定时中断
-			window.clearInterval(intervalID);
-this指向问题
-	全局、普通函数内、定时器回调函数内，指向window
-	对象的方法中，指向对象
-	构造函数中，指向实例对象
-js执行机制
-	同步单线程，异步多线程
-	同步任务
-		同步任务都在主线程上执行，形成一个执行栈
-	异步任务
-		js中的异步是通过回调函数实现的，放到一个任务队列(消息队列)里执行
-			普通事件，例如click、resize
-			资源加载，例如load、error
-			定时器，例如setinterval、settimeout
-	执行机制
-		1、先执行执行栈中的同步任务
-		2、遇到回调函数，把回调函数放入任务队列中
-		3、继续执行同步任务
-		4、执行栈中同步任务执行完之后，系统按次序读取任务队列中的异步任务，被读取的异步任务结束等待状态，进入执行栈，开始执行
-	事件循环
-		主线程不断地重复获得任务、执行任务、再获取任务、再执行，这种机制称为事件循环
-location对象
-	url
-		protocol://host [:port]/path/[?query]#fragment
-			query 参数，以键值对形式，用&符号分隔开
-			fragment 片段 常见于链接 锚点
-	location对象属性
-		location.href                   整个url
-		location.host                   域名
-		location.port                   端口号
-		location.pathname               路径，对应url中的path
-		location.search                 参数，对应url中的query
-		location.hash                   片段，对应url中的fragment
-	location对象方法
-		location.assign(url)            跟href一样，可以跳转页面(重定向页面)，可以后退
-		location.replace(url)           替换当前页面，因为不记录历史，所以不能后退
-		location.reload()               重新加载页面，相当于刷新(F5)，如果参数未true强制刷新(ctrl+F5)，只刷新不强制刷新有可能读的是本地的缓存网页
-navigator对象
-	常用属性
-		navigator.userAgent             包含浏览器相关信息，可用于判断用户使用哪个终端打开页面
-history对象
-	常用方法
-		history.back()                  后退到上一页面
-		history.forward()               前进功能
-		history.go(参数)                前进后退功能，参数如果是1前进一个页面，参数如果是-1后退一个页面
+## 概述
+- javascript语法的标准化组织是ECMA
+- DOM的标准化组织是W3C
+- BOM最初是Netscape浏览器标准的一部分，兼容性比较差，DOM包含在BOM里面
 
+## 常用对象
+### window对象
+1. 简介
+- window对象是浏览器的顶级对象，它具有双重角色
+- 它是js访问浏览器窗口的一个接口
+- 它是一个全局对象，定义在全局作用域中的变量、函数会变成window对象的属性和方法，在调用时可以省略window，如alert()、prompt()等，`window.name`是window的内置属性，所以其它变量不要使用name这个名字
+2. 常见事件
+- 窗口加载事件		
+  - 页面全部加载完毕才执行，这样就可以将js代码放到上方
+  - 传统注册方式：`window.onload = function(){}` 只能写一次，如果写多次，只有最后一个生效，前面的被覆盖
+  - 添加监听事件方式：`window.addEventListener('load', function(){})`
+- DOM加载事件
+  - DOM加载完成触发(不包括样式表、图片、flash等)，ie9以上支持
+  - 用于图片很多的站，图片未加载完也可以有交互效果
+  - `document.addEventListener('DOMContentLoaded', function(){})`	
+- 调整窗口大小事件
+  - 只要浏览器大小发生变化就触发
+  - 传统注册方式：`window.resize = fuction(){}`
+  - 添加监听事件方式：`window.addEventListener('resize', function(){})`
+3. 定时器
+- window.setTimeout(调用函数, [延迟的毫秒数])
+  - 函数仅执行一次，类似定时炸弹
+  - 经常给定时器取个名字区分不同的定时器
+```
+var timer1 = setTimeout(callback1, 2000);
+var timer2 = setTimeout(callback2, 5000);
+```
+  - window.clearTimeout(timeoutId)清除
+- window.setInterval(callback, [间隔的毫秒数])
+  - 函数可以执行很多次，类似定时中断
+  - window.clearInterval(intervalID)清除
+
+### location对象
+1. url
+- protocol://host [:port]/path/[?query]#fragment
+  - query 参数，以键值对形式，用&符号分隔开
+  - fragment 片段 常见于链接 锚点
+2. 常用属性
+- location.href                   整个url
+- location.host                   域名
+- location.port                   端口号
+- location.pathname               路径，对应url中的path
+- location.search                 参数，对应url中的query
+- location.hash                   片段，对应url中的fragment
+3. 常用方法
+- location.assign(url)            跟href一样，可以跳转页面(重定向页面)，可以后退
+- location.replace(url)           替换当前页面，因为不记录历史，所以不能后退
+- location.reload()               重新加载页面，相当于刷新(F5)，如果参数未true强制刷新(ctrl+F5)，只刷新不强制刷新有可能读的是本地的缓存网页
+
+### navigator对象
+1. 常用属性
+- navigator.userAgent             包含浏览器相关信息，可用于判断用户使用哪个终端打开页面
+
+### history对象
+1. 常用方法
+- history.back()                  后退到上一页面
+- history.forward()               前进功能
+- history.go(参数)                前进后退功能，参数如果是1前进一个页面，参数如果是-1后退一个页面
+
+## this指向问题
+- 全局、普通函数内、定时器回调函数内，指向window
+- 对象的方法中，指向对象
+- 构造函数中，指向实例对象
+
+## js执行机制
+1. 同步任务 
+- 同步任务都在主线程上执行，形成一个执行栈
+2. 异步任务
+- js中的异步是通过回调函数实现的，放到一个任务队列(消息队列)里执行
+  - 普通事件，例如click、resize
+  - 资源加载，例如load、error
+  - 定时器，例如setinterval、settimeout
+3. 执行机制
+- 先执行执行栈中的同步任务
+- 遇到回调函数，把回调函数放入任务队列中
+- 继续执行同步任务
+- 执行栈中同步任务执行完之后，系统按次序读取任务队列中的异步任务，被读取的异步任务结束等待状态，进入执行栈，开始执行
+4. 事件循环
+- 主线程不断地重复获得任务、执行任务、再获取任务、再执行，这种机制称为事件循环
+
+# js动画
+## 元素动态属性
+1. 元素偏移量offset
+- 常用属性
+  - element.offsetParent                      返回该元素具有定位属性的父级元素，如果父级都没有定位则返回body
+  - element.offsetTop                         返回元素相对带有定位的父级元素上方的偏移
+  - element.offsetLeft                        返回元素相对带有定位的父级元素左方的偏移
+  - element.offsetWidth                       返回自身包括padding、border、content的宽度，返回值没有单位
+  - element.offsetHeight                      返回自身包括padding、border、content
+- 与style的区别
+  - style只能获得行内样式表中的样式值        	offset可以得到任意样式表中的样式值
+  - style.width获得的是带单位的字符串        	offsetWidth获得的是没有单位的数字
+  - style.width不包含padding和border        	offsetWidth包含padding、border、content
+  - style.width可读可写                     	offsetWidth只读的高度，返回值没有单位
+- 获取用offset，设置用style
+2. 元素可视区client
+- 常用属性
+  - element.clientTop                          返回元素上边框的大小
+  - element.clientLeft                         返回元素左边框的大小
+  - element.clientWidth                        返回元素padding和content的宽度，不含边框，没有单位
+  - element.clientHeight                       返回元素padding和content的高度，不含边框，没有单位
+3. 元素滚动区scroll
+- 常用属性
+  - element.scrollTop                          返回被卷去的上册距离，没有单位
+  - element.scrollLeft                         返回被卷去的左侧距离，没有单位
+  - element.scrollWidth                        返回自身实际宽度，不含边框，没有单位
+  - element.scrollHeight                       返回自身实际高度，不含边框，没有单位
+- 用法
+  - 给盒子设置overflow: auto; 内容超出盒子范围时盒子会多出滚动条
+  - 滚动条滚动时会触发onscroll事件
+- 页面滚动
+  - 事件源是document
+  - 页面卷去的头部  window.pageYOffset document.documentElement.scrollTop(声明了DTD) document.body.scrollTop(未声明DTD)
+  - 页面卷去的左侧  window.pageXOffset
+- 与client的区别
+  - 如果内容超出盒子边框，scrollHeight会大于盒子高度，而clientHeight依然等于盒子高度
+
+## 动画核心原理
+- 通过定时器定时移动一定的距离
+- 缓慢动画原理 
+  - 步进值 = (目标值 - 现在位置) / 10
+  - 向左移动计算步长值需要向上取整，如果向下取整当距离target小于10就不会动了，向右移动向下取整
+- 注意
+  - 获取元素位置用offsetLeft，更改元素位置用style.left
+  - 同时被很多对象调用的函数中声明的局部变量最好声明为对象的一个属性(定时器)，这样不容易引起歧义
+  - 函数中给对象添加新属性之前应判断这个属性(定时器)是否已经添加过，避免频繁调用导致对象有大量同名属性
+- 小技巧
+  - 手动调用事件函数 obj.click()
+  - 节流阀 flag控制事件函数的执行时机，防止点击过于频繁
+  - 回调函数写法 callback && callback();
+  - 窗口滚动 `window.scroll(x, y);` 参数没有单位，00滚动到最顶最左
+- mouseover和mouseenter的区别
+  - mouseover/mouseout向上冒泡：假如给父盒子添加mouseover事件，鼠标经过父盒子会触发，鼠标经过子盒子也会触发，这是由于子盒子没有监听，会将事件向上冒泡，触发父盒子的mouseover事件
+  - mouseenter/mouseleave不冒泡：经过子盒子，即使子盒子没有监听，也不会触发父盒子的鼠标经过事件
+
+## 示例
+```
+//animate.js
+function animate(obj, target, callback){
+	clearInterval(obj.interval);
+	obj.interval = setInterval(function(){
+		if(obj.offsetLeft == target){
+			clearInterval(obj.interval);
+			if(callback){
+				callback();
+			}
+		}else{				
+			var step = (target - obj.offsetLeft) / 10;
+			step = step>0 ? Math.ceil(step) : Math.floor(step);
+			obj.style.left = obj.offsetLeft + step + 'px';
+		}
+	}, 15);
+}	
+//轮播图.js
+window.addEventListener('load', function(){
+	var box = document.querySelector('.box');
+	var pictures = document.querySelector('.pictures');
+	var dots = document.querySelector('.dots');
+	var leftArrow = document.querySelector('.leftarrow');
+	var rightArrow = document.querySelector('.rightarrow');
+	var iniPos = 0;
+	var index = 0;
+	var stepLength = pictures.children[0].offsetWidth;
+	var flag = true;
+	
+	//动态生成小圆点，使小圆点的数量与图片的数量一致
+	for(var i=0; i<pictures.children.length; i++){
+		var li = document.createElement('li');
+		dots.appendChild(li);
+		var a = document.createElement('a');
+		a.href = 'javascript:;';
+		a.setAttribute('indexVal', i);
+		li.appendChild(a);
+	}
+	dots.children[0].children[0].className = 'current';
+	
+	//将第一张图复制一份放到最后，实现无缝滚动效果
+	var first = pictures.children[0].cloneNode(true);
+	var last = pictures.children[pictures.children.length-1].cloneNode(true);
+	pictures.appendChild(first);
+	pictures.insertBefore(last, pictures.children[0]);
+	iniPos = -stepLength;
+	pictures.style.left = iniPos + 'px';
+	
+	//设置定时器，2s切一次图
+	var interval = setInterval(function(){
+		index++;
+		// index = index>dots.children.length-1 ? 0 : index; 
+		setPage();
+	}, 2000);
+	
+	//如果使用mouseover，鼠标经过box的子元素(pictures、leftArrow)也会触发事件，导致的结果是：尽管鼠标一直在box内，却有可能多次触发事件
+	//故此处使用mouseenter
+	box.addEventListener('mouseenter', function(){
+		// console.log('jingguole');
+		leftArrow.style.display = 'block';
+		rightArrow.style.display = 'block';
+		clearInterval(interval);
+	})
+	
+	box.addEventListener('mouseleave', function(){
+		// console.log('likaile');
+		leftArrow.style.display = 'none';
+		rightArrow.style.display = 'none';
+		interval = setInterval(function(){
+			index++;
+			// index = index>dots.children.length-1 ? 0 : index; 
+			setPage();
+		}, 2000);
+	})
+	
+	leftArrow.addEventListener('click', function(){
+		if(flag){
+			flag = false;
+			index--;
+			// index = index>dots.children.length-1 ? 0 : index; 
+			setPage();
+		}		
+	})
+	
+	rightArrow.addEventListener('click', function(){
+		if(flag){
+			flag = false;
+			index++;
+			// index = index<0 ? dots.children.length-1 : index;
+			setPage();
+		}		
+	})
+	
+	dots.addEventListener('click', function(e){
+		index = e.target.getAttribute('indexVal');
+		setPage();
+	})
+	
+	function setPage(){
+		// console.log(iniPos-index*stepLength);
+		
+		if(index == dots.children.length){
+			animate(pictures, iniPos-index*stepLength, function(){
+				index = 0;
+				// setDots(index);
+				pictures.style.left = iniPos-index*stepLength + 'px';
+				flag = true;
+			});		
+			setDots(0);
+		}else if(index == -1){
+			animate(pictures, iniPos-index*stepLength, function(){
+				index = dots.children.length-1;
+				setDots(index);
+				pictures.style.left = iniPos-index*stepLength + 'px';
+				flag = true;
+			});
+			setDots(dots.children.length-1);
+		}else{
+			animate(pictures, iniPos-index*stepLength, function(){
+				flag = true;
+			});
+			setDots(index);
+		}
+		// console.log(index);
+	}
+
+	function setDots(index){
+		for(var i=0; i<dots.children.length; i++){
+			dots.children[i].children[0].className = '';
+		}
+		dots.children[index].children[0].className = 'current';
+	}
+})
+```
+
+# 移动端事件、属性
+## 触屏事件
+1. 事件
+- touchstart 手指触摸DOM对象
+- touchmove  手指在DOM对象上移动
+- touchend   手指离开DOM对象
+2. 事件对象
+- e.touches            正在触摸屏幕的所有手指的一个列表
+- e.targetTouches      正在触摸当前DOM元素上的手指的一个列表，列表中每个元素有以下属性
+  - clientX、clientY
+  - pageX、pageY
+  - screenX、screenY
+  - target
+- e.changedTouches     手指状态发生了改变的列表，从无到有，从有到变化
+
+## 拖动元素
+1. 拖动元素过程中依次触发的事件
+- 触摸元素touchstart：获取手指初始坐标，同时获得盒子原来的位置
+- 移动手指touchmove：计算手指的滑动距离，并且移动盒子
+- 手指离开touchend
+2. 注意：
+- 手指移动也会触发屏幕滚动，所以这里要阻止默认的屏幕滚动e.preventDefault();
+
+## click延时解决方案
+1. 移动端click事件会有300ms的延时，原因是移动端屏幕双击会缩放(double tap to zoom)页面
+2. 解决方案
+- 禁用缩放
+- 利用touch事件自己封装
+  - 当手指触摸屏幕，记录当前触摸时间
+  - 当手指离开屏幕，用离开时间减去触摸时间
+  - 如果时间小于150ms并且没有滑动过屏幕，就定义为点击
+- 使用fastclick.js
+  - 引入js文件
+  - 复制usage代码放到代码头部
+
+## 插件
+1. fastclick.js
+- 解决click延时问题
+- 用法：引入js文件，复制usage代码放到代码头部
+2. swiper插件
+- 引入轮播图
+- 用法
+  - 引入相关文件 swiper.min.css、swiper.min.js
+  - 按照规定语法使用
+    - 复制示例的结构到页面中，更改内容
+    - 复制示例样式到css文件中，更改内容
+    - 复制示例js到js文件中，更改内容
+  - 参数更改 查看官网API文档，可以查看js代码的参数的意义以及如何更改
+3. zy.media.js  
+- 使视频组件在不同浏览器中显示的外观相同
+4. 其它插件
+	superslide.js
+	iscroll.js
+
+## 本地存储
+1. 特性
+- 数据存储在用户浏览器中
+- 设置、读取方便、页面刷新不丢失数据
+- 容量较大，sessionStorage约5M，localStorage约20M
+- 只能存储字符串，可以将对象JSON.stringify()编码后存储
+2. window.sessionStorage
+- 特征：
+  - 生命周期为关闭浏览器窗口
+  - 在同一个窗口(页面)下数据可以共享
+  - 以键值对的形式存储使用
+- 存储数据：`sessionStorage.setItem(key, value)`
+- 获取数据：`sessionStorage.getItem(key)`
+- 删除某个数据：`sessionStorage.removeItem(key)`
+- 删除全部数据：`sessionStorage.clear()`
+- 更改数据：`sessionStorage.setItem(key, value)`
+3. window.localStorage
+- 特征：
+  - 生命周期永久生效
+  - 可以多窗口共享(同一浏览器)
+  - 以键值对形式存储使用
+- 存储数据：`localStorage.setItem(key, value)`
+- 获取数据：`localStorage.getItem(key)`
+- 删除某个数据：`localStorage.removeItem(key)`
+- 删除全部数据：`localStorage.clear()`
+- 更改数据：`localStorage.setItem(key, value)`
+4. 记住用户名案例
+```
+//html
+<input type="checkbox" name="" id="">
+//js,可以通过change事件监听状态是否变化
+input.addEventListener('change',function(){
+
+})
+```
+	
+# ES5语法进阶
+## 构造函数和原型
+1. ES5创建对象的三种方式
+- 字面量 
+```
+var obj = {
+	uname: '刘德华',
+	age: 18
+	sing: function(){
+		console.log('我会唱歌');
+	}
+};
+```
+- new Object() 
+```
+var obj = new Object();
+obj.uname = 'zhangsan';
+	obj.age = 18;
+	obj.sing = function(){
+		console.log('我会唱歌');
+	}		
+```
+- 自定义构造函数
+```
+function Star(uname, age){
+	this.uname = uname;
+	this.age = age;
+	this.sing = function(){
+		console.log('我会唱歌');
+	}
+}
+var ldh = new Star('刘德华', 18);
+```
+- new构造函数会做四件事情：
+  - 在内存中创建一个新的空对象
+  - 让this指向这个新的对象
+  - 执行构造函数里面的代码，给这个新对象添加属性和方法
+  - 返回这个新对象(所以构造函数里面不需要return)
+2. 静态成员和实例成员
+- 实例成员
+  - 构造函数内部通过this添加的成员，例如uname、age、sing
+  - 它们只能通过实例化的对象来访问(ldh.uname)，不可以通过构造函数访问(Star.uname)
+- 静态成员
+  - 直接在构造函数本身上添加的成员
+    - `Star.sex = '男';`sex就是静态成员
+    - 静态成员只能通过构造函数来访问，不可以通过实例化的对象来访问
+3. 构造函数原型对象prototype	
+- 构造函数的问题：浪费内存，每一个对象的成员函数会各自占用内存空间
+- 构造函数原型对象prototype
+  - 每一个构造函数都有一个prototype属性，指向另一个对象
+  - 构造函数通过原型分配的函数是所有对象共享的
+  - 把那些不变的方法直接定义在prototype对象上，这样所有对象的实例就可以共享这些方法
+```
+Star.prototype.sing = function(){
+		console.log('我会唱歌');
+	}
+ldh = new Star();
+ldh.sing();
+```
+4. 对象原型`__proto__`
+- 每一个对象都会有一个`__proto__`属性指向其构造函数的原型对象`prototype`，所以对象实例可以使用构造函数原型定义的方法
+- 方法的查找规则
+  - 首先看对象实例身上是否有sing方法，如果有就直接执行
+  - 如果没有，再去查看构造函数原型对象prototype身上查找
+5. constructor
+- 原型对象`prototype`和对象原型`__proto__`都有一个constructor属性，指向创建对象的构造函数
+- 如果以对象的形式向`prototype`对象赋值，constructor属性会被覆盖，所以需手动添加constructor属性
+6. 原型链
+- `ldh.__proto__ === Star.prototype`                     true
+- `Star.prototype.__proto__ === Object.prototype`        true
+- `Object.prototype.__proto__ === null`                  true
+- `Star.prototype.constructor === Star`                  true
+- `Object.prototype.constructor === Object`              true
+- 实例对象的方法寻找顺序按照原型链顺次向上，直到找到为止
+![js原型链](./imgs/js原型链.png)
+7. this指向问题
+- 构造函数中this指向对象实例
+- 原型对象中的函数中this也指向对象实例
+- call()调用函数，并且改变函数运行时this的指向
+```
+fun.call(thisArg, arg1, arg2, ...)
+	thisArg：当前调用函数this的指向对象
+```
+8. 扩展内置对象
+- 给内置对象Array添加求和方法
+```
+Array.prototype.sum = function(){
+	var sum = 0;
+	for(var i=0; i<this.length; i++){
+		sum += this[i];
+	}
+	return sum;
+}
+var arr = {1, 2, 3};
+console.log(arr.sum());
+```
+
+
+	组合继承
+		父构造函数
+			function Father(uname, age){
+				// this指向父构造函数的对象实例
+				this.uname = uname;
+				this.age = age;
+			}
+			Father.prototype.money = function(){
+				console.log(100000);
+			}
+		子构造函数
+			function Son(uname, age, score){
+				// this指向子构造函数的对象实例
+				Father.call(this, uname, age);
+				this.score = score;
+			}
+			// 将Son的原型对象指向一个Father构造函数实例化的对象，从而间接访问Father.prototype中的函数
+			Son.prototype = new Father();
+			// 重新指定Son.prototype.constructor，否则它会指向Father(因为Son.prototype是一个Father的实例对象)
+			Son.prototype.constructor = Son;
+			// 如果直接让Son.prototype = Father.prototype，相当于两个实例对象指向同一地址，Son.prototype中定义的函数Father的对象实例也能访问
+			Son.prototype.exam = function(){
+				console.log(100);
+			}
+		实例化
+			var son = new Son('ldh', 18, 100);
+类的本质
+	类的本质还是一个函数，可以认为类是构造函数的另一种写法
+		类有原型对象prototype
+		类原型对象prototype里面有constructor属性，指向类本身
+		类可以通过原型对象添加方法
+		类实例化的对象也有__proto__属性，指向类的原型对象
+	ES6的类绝大部分功能ES5都可以做到，ES6的类其实就是语法糖
+ES5中的新增方法
+	数组方法
+		迭代(遍历)方法
+			forEach()
+				arr.forEach(function(value, index, array){
+					
+				})
+					value: 每一个数组元素的值
+					index：每一个数组元素的索引号
+					array：数组本身
+					arr.forEach(function(value, index, array){
+						sum += value;
+					})
+					回调函数中return不会终止迭代
+			map()
+			filter()
+				array.filter(function(value, index, arr){
+					
+				})
+					filter方法创建一个新数组，数组中元素是通过检查指定数组中符合条件的所有元素
+					它直接返回一个新数组
+					var newArr = array.filter(function(value, index, arr){
+						return value >= 20;
+					})
+					遇到return不会终止迭代
+			some()
+				array.some(function(value, index, arr){
+					
+				})
+					检测数组中有没有满足条件的元素，如果有返回true，否则返回false
+					如果找到第一个满足条件的元素则终止循环
+					var flag = array.some(function(value, index, arr){
+						return value >= 20;
+					})
+					回调函数中遇到return true就会终止迭代
+			every()
+	字符串方法
+		var str1 = str.trim();
+			trim方法可以去除字符串两侧的空格
+	对象方法
+		Object.defineProperty()
+			定义对象新属性或修改原有属性的值
+			Object.defineProperty(obj, prop, descriptor)
+				obj：对象
+				prop：属性
+				dexcriptor：说明，以对象形式{}书写
+					value：属性值，默认undefined
+					writable：值是否可以重写，默认false
+					enumerable：目标属性是否可以被枚举，默认为false，即不允许遍历(bj.keys()取不到)
+					configurable目标属性是否可以被删除或是否可以再次修改特性，默认false
+函数进阶
+	函数的定义方式
+		1、function fn(){}
+		2、var fn = function(){}
+		3、var f = new Function('参数1', '参数2', '函数体');
+		所有函数都是Function的实例对象
+	函数的调用方式
+		普通函数
+			function fn(){}
+				1、fn();
+				2、fn.call();
+		对象的方法
+			var o = {
+				sayHi: function(){}
+			}
+				o.sayHi();
+		构造函数
+			function Star(){}
+				var ldh = new Star();
+		绑定事件函数
+			btn.onclick = function(){}
+				点击按钮调用
+		定时器函数
+			setInterval(function(){}, 1000)
+				定时器每隔1s调用一次
+		立即执行函数
+			(function(){})()
+				自动调用
+	函数中this指向问题
+		普通函数
+			指向window
+		对象中函数
+			指向对象o
+		构造函数
+			指向ldh这个实例对象
+			构造函数原型对象中的函数中this也指向ldh这个实例对象
+		绑定事件函数
+			指向函数的调用者btn，即绑定事件的对象
+		定时器函数
+			指向window
+		立即执行函数
+			指向window
+	改变函数内部this指向
+		call方法
+			fn.call(thisArg, arg1, arg2, ...)
+			主要应用：类继承
+		apply方法
+			fn.apply(thisArg, [argArray])
+			调用函数，改变this指向
+			参数必须是数组
+			主要应用：借助Math内置对象求最大值
+				var arr = [1, 2, 3, 4, 5];
+				var max = Math.max.apply(Math, arr);
+		bind方法
+			fn.bind(thisArg, arg1, arg2, ...);
+			不调用函数，只改变函数内部this的指向；返回由指定的this值和初始化参数改造的原函数拷贝
+				var f = fn.bind(o, 1, 2);
+				f();
+			典型应用：发送验证码按钮，将定时器函数中this指向btn
+				btn.onclick = function(){
+					this.disabled = true;
+					setTimeout(function(){
+						this.disabled = false;
+					}.bind(this), 3000)
+				}
+	严格模式
+		开启严格模式
+			整个脚本
+				在脚本最上面写上'use strict';
+			某个函数
+				function fn(){
+					'use strict';
+					...
+				}
+		严格模式中的变化
+			变量：
+				变量必须先声明再使用
+				不能随意删除已经声明好的变量 delete num
+			this：
+				全局作用域中的this是undefined，非严格模式是window
+				如果构造函数不加new调用，this会报错
+				定时器中this还是指向window
+			函数：
+				不允许函数参数有重名情况
+				不允许在非函数代码块中声明函数
+	高阶函数
+		传递过来的参数是函数，或返回值是函数
+	闭包
+		变量作用域
+			全局
+			局部
+		闭包
+			某个作用域有权访问另一个函数作用域中变量，被访问变量所在作用域称为闭包，fn就是闭包
+			闭包的作用是延申了变量的作用范围
+			function fn(){
+				var num = 0;
+				function fun(){
+					console.log(num);
+				}
+				// fun();
+				return fun;
+			}
+			fn();
+			var f = fn();
+			f();
+		闭包的应用
+			for(var i=0; i<lis.length; i++){
+				(function(i){
+					lis[i].onclick = function(){
+						console.log(i);
+					}
+				})(i);
+			}
+			立即执行函数也称为小闭包，因为立即执行函数中的任何一个函数都可以使用它的i变量
+	递归
+		自己调用自己的函数
+		栈溢出 stack overflow
+			必须要加退出条件，利用return语句退出
+		利用递归求阶乘
+			function fn(n){
+				if(n == 1){
+					return 1;
+				}
+				return n * fn(n-1);
+			}
+			fn(100);
+		利用递归求斐波那契数列
+			function fn(n){
+				if(n == 1){
+					return 1;
+				}
+				return fn(n-1)+fn(n-2);
+			}
+			fn(100);
+	浅拷贝和深拷贝
+		浅拷贝
+			对象级别的数据只是把地址拷贝过去，新数据和旧数据指向内存同一地址
+				直接赋值
+				Object.assign(o, obj); 把obj浅拷贝给o
+		深拷贝
+			对象级别的数据在内存中开辟新空间，新数据和旧数据指向内存不同地址
+				递归赋值
+正则表达式
+	创建
+		1、var regexp = new RegExp(/123/);
+		2、var regexp = /123/;
+	测试
+		regexObj.test(str);
+		只要包含123就符合
+		符合返回true，不符合返回false
+	特殊字符(元字符)
+		边界符
+			^abc                     以abc开头
+			abc$                     以abc结尾
+			^abc$                    只有'abc'才匹配
+		字符类                       
+			[abc]                    a、b、c出现任意一个就匹配
+			[a-z]                    任意一个小写字母
+			[A-Z]                    任意一个大写字母
+			[0-9]                    任意一个数字
+			[a-zA-Z0-9_-]            判断用户名
+			[^a-z]                   不能包含小写字母
+		量词符                       
+			*                        0~n次
+			+                        1~n次
+			?                        0、1次
+			{n}                      n次
+			{n,}                     大于等于n次
+			{m,n}                    大于等于m次小于等于n次,中间不能有空格
+			^[a-zA-Z0-9_-]{6,16}$    判断用户名
+		预定义类
+			\d                       [0-9]数字
+			\D                       [^0-9]非数字
+			\w                       [a-zA-Z0-9_]字母数字下划线
+			\W                       [^a-zA-Z0-9_]
+			\s                       [\t\r\n\v\f]空格、换行符、制表符
+			\S                       [^\t\r\n\v\f]
+		或符号 |
+			var reg = /^\d{3}-\d{8}|\d{4}-\d{7}$/
+	括号总结
+		中括号                  字符集合，匹配方括号中的任意字符
+		大括号                  量词符，里面表示重复次数
+		小括号                  表示优先级
+	菜鸟工具
+		https://c.runoob.com/
+	正则替换
+		newStr = stringObject.replace(regEx, 替换文本);
+		如果正则表达式不加参数，只替换第一个
+		正则表达式参数
+			g                   全局匹配    /123/g
+			i                   忽略大小写  /123/i
+			gi                  全局匹配且忽略大小写    /123/gi
 # 查阅文档
 - MDN：https://developer.mozilla.org/zh-CN/
 - WebAPI：浏览器API，DOM和BOM https://developer.mozilla.org/zh-CN/docs/Web/API

@@ -1641,41 +1641,45 @@ Array.prototype.sum = function(){
 var arr = {1, 2, 3};
 console.log(arr.sum());
 ```
-
-
-	组合继承
-		父构造函数
-			function Father(uname, age){
-				// this指向父构造函数的对象实例
-				this.uname = uname;
-				this.age = age;
-			}
-			Father.prototype.money = function(){
-				console.log(100000);
-			}
-		子构造函数
-			function Son(uname, age, score){
-				// this指向子构造函数的对象实例
-				Father.call(this, uname, age);
-				this.score = score;
-			}
-			// 将Son的原型对象指向一个Father构造函数实例化的对象，从而间接访问Father.prototype中的函数
-			Son.prototype = new Father();
-			// 重新指定Son.prototype.constructor，否则它会指向Father(因为Son.prototype是一个Father的实例对象)
-			Son.prototype.constructor = Son;
-			// 如果直接让Son.prototype = Father.prototype，相当于两个实例对象指向同一地址，Son.prototype中定义的函数Father的对象实例也能访问
-			Son.prototype.exam = function(){
-				console.log(100);
-			}
-		实例化
-			var son = new Son('ldh', 18, 100);
-类的本质
-	类的本质还是一个函数，可以认为类是构造函数的另一种写法
-		类有原型对象prototype
-		类原型对象prototype里面有constructor属性，指向类本身
-		类可以通过原型对象添加方法
-		类实例化的对象也有__proto__属性，指向类的原型对象
-	ES6的类绝大部分功能ES5都可以做到，ES6的类其实就是语法糖
+9. 组合继承
+- 父构造函数
+```
+function Father(uname, age){
+	// this指向父构造函数的对象实例
+	this.uname = uname;
+	this.age = age;
+}
+Father.prototype.money = function(){
+	console.log(100000);
+}
+```
+- 子构造函数
+```
+function Son(uname, age, score){
+	//step1:this指向子构造函数的对象实例
+	Father.call(this, uname, age);
+	this.score = score;
+}
+//step2:将Son的原型对象指向一个Father构造函数实例化的对象，从而间接访问Father.prototype中的函数
+Son.prototype = new Father();
+//step3:重新指定Son.prototype.constructor，否则它会指向Father(因为Son.prototype是一个Father的实例对象)
+Son.prototype.constructor = Son;
+//warning:如果直接让Son.prototype = Father.prototype，相当于两个实例对象指向同一地址，Son.prototype中定义的函数Father的对象实例也能访问
+Son.prototype.exam = function(){
+	console.log(100);
+}
+```
+- 实例化
+```
+var son = new Son('ldh', 18, 100);
+```
+10. 类的本质
+- 类的本质还是一个函数，可以认为类是构造函数的另一种写法
+  - 类有原型对象prototype
+  - 类原型对象prototype里面有constructor属性，指向类本身
+  - 类可以通过原型对象添加方法
+  - 类实例化的对象也有__proto__属性，指向类的原型对象
+ES6的类绝大部分功能ES5都可以做到，ES6的类其实就是语法糖
 ES5中的新增方法
 	数组方法
 		迭代(遍历)方法

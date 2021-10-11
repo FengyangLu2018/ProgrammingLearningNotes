@@ -1541,7 +1541,6 @@ window.addEventListener('load', function(){
 <input type="checkbox" name="" id="">
 //js,可以通过change事件监听状态是否变化
 input.addEventListener('change',function(){
-
 })
 ```
 	
@@ -2203,11 +2202,11 @@ console.log(ary);
 ### 类的创建
 - class 类名{}
 ```
-class Star{
-	
+class Star{	
 }
 var ldh = new Star();
 ```
+
 ### constructor构造函数添加共有属性
 - constructor是类的构造函数，用于传递参数、返回实例对象
 - new生成对象实例时自动调用
@@ -2221,6 +2220,7 @@ class Star{
 }
 var ldh = new Star('刘德华', 20);
 ```
+
 ### 添加共有方法
 - 类里面所有函数不需要写function
 - 多个函数之间不能加逗号
@@ -2237,6 +2237,7 @@ class Star{
 var ldh = new Star('刘德华', 20);
 ldh.sing('冰雨');
 ```
+
 ### 类的继承
 1. extends使子类继承父类的方法
 2. super可以调用父类的constructor函数，使子类的参数可以传递给父类的构造函数
@@ -2277,6 +2278,7 @@ son.say();
 son.sum();
 son.substract();
 ```
+
 ### 注意
 1. es6中没有变量提升，必须先定义类后实例化
 2. 类里面共有的属性和方法一定要加this使用`this.uname`
@@ -2298,7 +2300,349 @@ class Star{
 var ldh = new Star('刘德华', 20);
 ldh.sing();
 ```
+
+# ajax
+## 原生AJAX
+### 概述	
+1. 简介
+- Asynchronous Javascript And XML，异步的js和xml
+- 可以在浏览器向服务器发送异步请求，无刷新获取数据。
+- 不是编程语言，而是一种将先有标准组合在一起使用的新方式。
+2. XML简介
+- 概述
+  - 可扩展标记语言
+  - 用于传输和存储数据
+  - 没有预定义标签
+  - 现在已经被json取代
+- 示例
+```
+<student>
+	<name>zhangsan</name>
+	<age>18</age>
+	<gender>male</gender>
+</student>
+```		
+- 与HTML的区别
+  - 超文本标记语言
+  - 用于呈现页面
+  - 全是预定义标签
+3. ajax的特点
+- 优点
+  - 无刷新与服务器通信
+  - 允许根据用户时间来更新部分网页内容
+- 缺点
+  - 没有浏览历史，不能回退
+  - 不能跨域，从a.com无法通过ajax请求b.com的数据
+  - 对SEO不友好，爬虫爬不到ajax返回的数据
+4. http协议
+- 请求报文
+  - 行		
+```
+POST	/s?ie=utf-8	HTTP/1.1
+请求类型	/url或查询字符串	协议版本
+```
+  - 头
+```
+Host: atguigu.com
+Cookie: name=guigu
+Content-type: application/x-www-form-urlencoded
+User-Agent: chrome 83
+```
+  - 空行
+  - 体
+    - GET请求请求体为空
+	- POST请求可以不为空 `username=admin&password=admin`
+- 响应报文
+  - 行
+```
+HTTP/1.1	200	OK
+协议类型	响应状态码	响应状态字符串
+```
+  - 头
+```
+Content-type: text/html;charset=utf-8
+Content-length: 2048
+Content-encoding: gzip
+```
+  - 空行
+  - 体
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>标题</title>
+	</head>
+	<body>
+		
+	</body>
+</html>
+```
+
+### 使用
+1. 创建对象 `const xhr = new XMLHttpRequest();`
+2. 设置属性
+- 响应体数据类型 `xhr.responseType = 'json';`
+- 设置超时及网络异常处理
+```
+// 超时设置2s
+xhr.timeout = 2000;
+// 超时回调
+xhr.ontimeout = function(){
+	alert('超时未收到响应');
+}
+// 网络异常回调
+xhr.onerror = function(){
+	alert('你的网络可能异常');
+}
+```
+3. 初始化,设置请求方法和url
+```
+// url加上时间戳可以解决ie浏览器从缓存取ajax数据的问题
+xhr.open('GET', 'http://127.0.0.1:8000/server?a=100&b-200&c=300&t='+Date.now());
+xhr.open('POST', 'http://127.0.0.1:8000/server?t='+Date.now());
+```
+4. 设置请求头
+```
+// 设置请求头，设置请求内容类型
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+// 设置自定义请求头
+xhr.setRequestHeader('name', '12345');
+```
+5. 发送 
+```
+//GET请求一定没有请求体
+xhr.send();
+//POST请求可以有请求体，也可以没有
+xhr.send(body);
+```
+6. 事件绑定
+- readystate是xhr对象的属性,表示状态0 1 2 3 4
+  - 0：初始状态
+  - 1：open方法调用完毕
+  - 2：send方法调用完毕
+  - 3：服务端返回部分结果
+  - 4：服务端返回所有结果
+- 示例
+```
+xhr.onreadystatechange = function(){
+	// 判断readystate
+	if(xhr.readyState === 4){
+		// 判断响应状态码
+		if(xhr.status >= 200 && xhr.status < 300){
+			// 处理结果 行 头 空行 体
+			// 响应头
+			console.log(xhr.status);//状态码
+			console.log(xhr.statusText);//状态字符串
+			console.log(xhr.getAllResponseHeaders());//所有响应头
+			// 响应体
+			console.log(xhr.response); 
+			result.innerHTML = xhr.response;
+			result.innerHTML = xhr.response.name;//响应数据为json类型
+		}else{
+			// 异常处理
+		}						
+	}
+}
+```
+7. 解决重复请求问题、手动取消请求`xhr.abort()`
+```
+let xhr = null;
+// 设置标志位
+let isSending = false;
+btn.addEventListener('click', () => {
+	// 如果前一次请求未完成再次发起请求,则将前一次请求取消
+	if(isSending) xhr.abort();
+	xhr = new XMLHttpRequest();
+	// 创建xhr对象之后将标志置位
+	isSending = true;
+	xhr.open('GET', 'http://127.0.0.1:8000/delay?t=' + Date.now());
+	xhr.send();
+	xhr.onreadystatechange = function() {
+		// 判断readystate
+		if (xhr.readyState === 4) {
+				// 收到响应将标志清除
+				isSending = false;
+				result.innerHTML = xhr.response;
+		}
+	}
+})
+//手动取消
+cancel.addEventListener('click', () => {
+	xhr.abort();
+})
+```
+
+### 服务器端
+1. 安装node
+2. express的基本使用
+```
+// 1、引入
+const express = require('express');
+// 2、创建应用对象
+const app = express();
+// 3、创建路由规则
+// request是对请求报文的封装
+// response是响应报文的封装
+app.get('/', (request, response)=>{
+	// 设置响应
+	response.send("HELLO EXPRESS");
+});
+app.get('/server', (request, response)=>{
+	// 设置响应头，设置允许跨域
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	// 设置响应体
+	response.send("HELLO AJAX GET");
+});
+app.get('/json-server', (request, response)=>{
+	// 设置响应头，设置允许跨域
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	// 设置响应体
+	const data = {
+		name: 'lfy'
+	};
+	let str = JSON.stringify(data);
+	response.send(str);
+});
+app.get('/delay', (request, response)=>{
+	// 设置响应头，设置允许跨域
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	// 设置响应体
+	setTimeout(() => {
+		response.send("延时响应");
+	}, 3000)
+});
+app.post('/server', (request, response)=>{
+	// 设置响应头，设置允许跨域
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	// 设置响应头，设置允许自定义请求头
+	response.setHeader('Access-Control-Allow-Headers', '*');
+	// 设置响应体
+	response.send("HELLO AJAX POST");
+});
+app.all('/server', (request, response)=>{
+	// 设置响应头，设置允许跨域
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	// 设置响应头，设置允许自定义请求头
+	response.setHeader('Access-Control-Allow-Headers', '*');
+	// 设置响应体
+	response.send("HELLO AJAX 测试自定义请求头");
+});
+// 4、监听端口
+app.listen(8000, ()=>{
+	console.log("服务已经启动，8000端口监听中...");
+})
+```
+
+## axios
+1. cdn引入
+- cdn.bootcdn.net搜索ajax关键字
+- 如果引入报错加上crossorigin="anonymous"这个属性
+2. 配置baseUrl `axios.defaults.baseURL = 'http://127.0.0.1:8000';`
+3. 发送请求
+- GET请求
+```
+axios.get('/axios-server', {
+	// url参数
+	params:{
+		id: 100,
+		vip: 7
+	},
+	// 请求头信息
+	headers:{
+		name: 'atguigu',
+		age: 20
+	}
+}).then(value => {
+	console.log(value);
+});
+```
+- POST请求
+```
+axios.post('/axios-server', {
+		// 请求体
+		username: 'admin',
+		password: 'admin'
+	},{
+	params:{
+		id: 200,
+		vip: 9
+	},
+	headers:{
+		height: 180,
+		weight: 180
+	}
+}).then(value => {
+	console.log(value);
+});
+```
+- 通用方法
+```
+axios({
+	// 请求方法
+	method: 'POST',
+	// url
+	url: '/axios-server',
+	// url参数
+	params: {
+		vip: 10,
+		level: 30
+	},
+	// 头信息
+	headers: {
+		a: 100,
+		b: 200
+	},
+	// 请求体参数
+	data:{
+		username:'admin',
+		password:'admin'
+	}
+}).then(response => {
+	console.log(response);
+	// 响应状态码
+	console.log(response.status);
+	// 响应状态字符串
+	console.log(response.statusText);
+	// 响应头信息
+	console.log(response.headers);
+	// 响应体
+	console.log(response.data);
+})
+```
+
+## fetch函数
+```
+fetch(url, {
+	method: 'POST',
+	headers: {
+		name: 'atguigu'
+	},
+	// 请求体
+	body: 'username=admin&password=admin'
+}).then(response => {
+		// return response.text();
+		return response.json();
+	}).then(response => {
+		console.log(response);
+	})
+```
+
+## 跨域请求
+1. 同源策略
+- 同源指协议、域名、端口号完全相同
+- 违背同源策略就是跨域
+2. 跨域解决方案
+- jsonp
+- cors跨域资源共享
+```
+response.setHeader('Access-Control-Allow-Origin', '*');
+response.setHeader('Access-Control-Allow-Headers', '*');
+response.setHeader('Access-Control-Allow-Method', '*');
+```
+
 # 查阅文档
 - MDN：https://developer.mozilla.org/zh-CN/
 - WebAPI：浏览器API，DOM和BOM https://developer.mozilla.org/zh-CN/docs/Web/API
 - 菜鸟工具：https://c.runoob.com/
+- cdn查询：https://cdn.bootcdn.net

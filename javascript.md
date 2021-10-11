@@ -1547,6 +1547,7 @@ input.addEventListener('change',function(){
 	
 # ES5语法进阶
 ## 构造函数和原型
+### 构造函数
 1. ES5创建对象的三种方式
 - 字面量 
 ```
@@ -1591,7 +1592,9 @@ var ldh = new Star('刘德华', 18);
   - 直接在构造函数本身上添加的成员
     - `Star.sex = '男';`sex就是静态成员
     - 静态成员只能通过构造函数来访问，不可以通过实例化的对象来访问
-3. 构造函数原型对象prototype	
+
+### 原型链
+1. 构造函数原型对象prototype	
 - 构造函数的问题：浪费内存，每一个对象的成员函数会各自占用内存空间
 - 构造函数原型对象prototype
   - 每一个构造函数都有一个prototype属性，指向另一个对象
@@ -1604,15 +1607,15 @@ Star.prototype.sing = function(){
 ldh = new Star();
 ldh.sing();
 ```
-4. 对象原型`__proto__`
+2. 对象原型`__proto__`
 - 每一个对象都会有一个`__proto__`属性指向其构造函数的原型对象`prototype`，所以对象实例可以使用构造函数原型定义的方法
 - 方法的查找规则
   - 首先看对象实例身上是否有sing方法，如果有就直接执行
   - 如果没有，再去查看构造函数原型对象prototype身上查找
-5. constructor
+3. constructor
 - 原型对象`prototype`和对象原型`__proto__`都有一个constructor属性，指向创建对象的构造函数
 - 如果以对象的形式向`prototype`对象赋值，constructor属性会被覆盖，所以需手动添加constructor属性
-6. 原型链
+4. 原型链
 - `ldh.__proto__ === Star.prototype`                     true
 - `Star.prototype.__proto__ === Object.prototype`        true
 - `Object.prototype.__proto__ === null`                  true
@@ -1620,15 +1623,8 @@ ldh.sing();
 - `Object.prototype.constructor === Object`              true
 - 实例对象的方法寻找顺序按照原型链顺次向上，直到找到为止
 ![js原型链](./imgs/js原型链.png)
-7. this指向问题
-- 构造函数中this指向对象实例
-- 原型对象中的函数中this也指向对象实例
-- call()调用函数，并且改变函数运行时this的指向
-```
-fun.call(thisArg, arg1, arg2, ...)
-	thisArg：当前调用函数this的指向对象
-```
-8. 扩展内置对象
+
+5. 扩展内置对象
 - 给内置对象Array添加求和方法
 ```
 Array.prototype.sum = function(){
@@ -1641,7 +1637,18 @@ Array.prototype.sum = function(){
 var arr = {1, 2, 3};
 console.log(arr.sum());
 ```
-9. 组合继承
+
+### 组合继承
+1. this指向问题
+- 构造函数中this指向对象实例
+- 原型对象中的函数中this也指向对象实例
+- call()调用函数，并且改变函数运行时this的指向
+```
+fun.call(thisArg, arg1, arg2, ...)
+	thisArg：当前调用函数this的指向对象
+```
+
+2. 组合继承
 - 父构造函数
 ```
 function Father(uname, age){
@@ -1673,255 +1680,625 @@ Son.prototype.exam = function(){
 ```
 var son = new Son('ldh', 18, 100);
 ```
-10. 类的本质
+3. 类的本质
 - 类的本质还是一个函数，可以认为类是构造函数的另一种写法
   - 类有原型对象prototype
   - 类原型对象prototype里面有constructor属性，指向类本身
   - 类可以通过原型对象添加方法
-  - 类实例化的对象也有__proto__属性，指向类的原型对象
-ES6的类绝大部分功能ES5都可以做到，ES6的类其实就是语法糖
-ES5中的新增方法
-	数组方法
-		迭代(遍历)方法
-			forEach()
-				arr.forEach(function(value, index, array){
-					
-				})
-					value: 每一个数组元素的值
-					index：每一个数组元素的索引号
-					array：数组本身
-					arr.forEach(function(value, index, array){
-						sum += value;
-					})
-					回调函数中return不会终止迭代
-			map()
-			filter()
-				array.filter(function(value, index, arr){
-					
-				})
-					filter方法创建一个新数组，数组中元素是通过检查指定数组中符合条件的所有元素
-					它直接返回一个新数组
-					var newArr = array.filter(function(value, index, arr){
-						return value >= 20;
-					})
-					遇到return不会终止迭代
-			some()
-				array.some(function(value, index, arr){
-					
-				})
-					检测数组中有没有满足条件的元素，如果有返回true，否则返回false
-					如果找到第一个满足条件的元素则终止循环
-					var flag = array.some(function(value, index, arr){
-						return value >= 20;
-					})
-					回调函数中遇到return true就会终止迭代
-			every()
-	字符串方法
-		var str1 = str.trim();
-			trim方法可以去除字符串两侧的空格
-	对象方法
-		Object.defineProperty()
-			定义对象新属性或修改原有属性的值
-			Object.defineProperty(obj, prop, descriptor)
-				obj：对象
-				prop：属性
-				dexcriptor：说明，以对象形式{}书写
-					value：属性值，默认undefined
-					writable：值是否可以重写，默认false
-					enumerable：目标属性是否可以被枚举，默认为false，即不允许遍历(bj.keys()取不到)
-					configurable目标属性是否可以被删除或是否可以再次修改特性，默认false
-函数进阶
-	函数的定义方式
-		1、function fn(){}
-		2、var fn = function(){}
-		3、var f = new Function('参数1', '参数2', '函数体');
-		所有函数都是Function的实例对象
-	函数的调用方式
-		普通函数
-			function fn(){}
-				1、fn();
-				2、fn.call();
-		对象的方法
-			var o = {
-				sayHi: function(){}
-			}
-				o.sayHi();
-		构造函数
-			function Star(){}
-				var ldh = new Star();
-		绑定事件函数
-			btn.onclick = function(){}
-				点击按钮调用
-		定时器函数
-			setInterval(function(){}, 1000)
-				定时器每隔1s调用一次
-		立即执行函数
-			(function(){})()
-				自动调用
-	函数中this指向问题
-		普通函数
-			指向window
-		对象中函数
-			指向对象o
-		构造函数
-			指向ldh这个实例对象
-			构造函数原型对象中的函数中this也指向ldh这个实例对象
-		绑定事件函数
-			指向函数的调用者btn，即绑定事件的对象
-		定时器函数
-			指向window
-		立即执行函数
-			指向window
-	改变函数内部this指向
-		call方法
-			fn.call(thisArg, arg1, arg2, ...)
-			主要应用：类继承
-		apply方法
-			fn.apply(thisArg, [argArray])
-			调用函数，改变this指向
-			参数必须是数组
-			主要应用：借助Math内置对象求最大值
-				var arr = [1, 2, 3, 4, 5];
-				var max = Math.max.apply(Math, arr);
-		bind方法
-			fn.bind(thisArg, arg1, arg2, ...);
-			不调用函数，只改变函数内部this的指向；返回由指定的this值和初始化参数改造的原函数拷贝
-				var f = fn.bind(o, 1, 2);
-				f();
-			典型应用：发送验证码按钮，将定时器函数中this指向btn
-				btn.onclick = function(){
-					this.disabled = true;
-					setTimeout(function(){
-						this.disabled = false;
-					}.bind(this), 3000)
-				}
-	严格模式
-		开启严格模式
-			整个脚本
-				在脚本最上面写上'use strict';
-			某个函数
-				function fn(){
-					'use strict';
-					...
-				}
-		严格模式中的变化
-			变量：
-				变量必须先声明再使用
-				不能随意删除已经声明好的变量 delete num
-			this：
-				全局作用域中的this是undefined，非严格模式是window
-				如果构造函数不加new调用，this会报错
-				定时器中this还是指向window
-			函数：
-				不允许函数参数有重名情况
-				不允许在非函数代码块中声明函数
-	高阶函数
-		传递过来的参数是函数，或返回值是函数
-	闭包
-		变量作用域
-			全局
-			局部
-		闭包
-			某个作用域有权访问另一个函数作用域中变量，被访问变量所在作用域称为闭包，fn就是闭包
-			闭包的作用是延申了变量的作用范围
-			function fn(){
-				var num = 0;
-				function fun(){
-					console.log(num);
-				}
-				// fun();
-				return fun;
-			}
-			fn();
-			var f = fn();
-			f();
-		闭包的应用
-			for(var i=0; i<lis.length; i++){
-				(function(i){
-					lis[i].onclick = function(){
-						console.log(i);
-					}
-				})(i);
-			}
-			立即执行函数也称为小闭包，因为立即执行函数中的任何一个函数都可以使用它的i变量
-	递归
-		自己调用自己的函数
-		栈溢出 stack overflow
-			必须要加退出条件，利用return语句退出
-		利用递归求阶乘
-			function fn(n){
-				if(n == 1){
-					return 1;
-				}
-				return n * fn(n-1);
-			}
-			fn(100);
-		利用递归求斐波那契数列
-			function fn(n){
-				if(n == 1){
-					return 1;
-				}
-				return fn(n-1)+fn(n-2);
-			}
-			fn(100);
-	浅拷贝和深拷贝
-		浅拷贝
-			对象级别的数据只是把地址拷贝过去，新数据和旧数据指向内存同一地址
-				直接赋值
-				Object.assign(o, obj); 把obj浅拷贝给o
-		深拷贝
-			对象级别的数据在内存中开辟新空间，新数据和旧数据指向内存不同地址
-				递归赋值
-正则表达式
-	创建
-		1、var regexp = new RegExp(/123/);
-		2、var regexp = /123/;
-	测试
-		regexObj.test(str);
-		只要包含123就符合
-		符合返回true，不符合返回false
-	特殊字符(元字符)
-		边界符
-			^abc                     以abc开头
-			abc$                     以abc结尾
-			^abc$                    只有'abc'才匹配
-		字符类                       
-			[abc]                    a、b、c出现任意一个就匹配
-			[a-z]                    任意一个小写字母
-			[A-Z]                    任意一个大写字母
-			[0-9]                    任意一个数字
-			[a-zA-Z0-9_-]            判断用户名
-			[^a-z]                   不能包含小写字母
-		量词符                       
-			*                        0~n次
-			+                        1~n次
-			?                        0、1次
-			{n}                      n次
-			{n,}                     大于等于n次
-			{m,n}                    大于等于m次小于等于n次,中间不能有空格
-			^[a-zA-Z0-9_-]{6,16}$    判断用户名
-		预定义类
-			\d                       [0-9]数字
-			\D                       [^0-9]非数字
-			\w                       [a-zA-Z0-9_]字母数字下划线
-			\W                       [^a-zA-Z0-9_]
-			\s                       [\t\r\n\v\f]空格、换行符、制表符
-			\S                       [^\t\r\n\v\f]
-		或符号 |
-			var reg = /^\d{3}-\d{8}|\d{4}-\d{7}$/
-	括号总结
-		中括号                  字符集合，匹配方括号中的任意字符
-		大括号                  量词符，里面表示重复次数
-		小括号                  表示优先级
-	菜鸟工具
-		https://c.runoob.com/
-	正则替换
-		newStr = stringObject.replace(regEx, 替换文本);
-		如果正则表达式不加参数，只替换第一个
-		正则表达式参数
-			g                   全局匹配    /123/g
-			i                   忽略大小写  /123/i
-			gi                  全局匹配且忽略大小写    /123/gi
+  - 类实例化的对象也有`__proto__`属性，指向类的原型对象
+- ES6的类绝大部分功能ES5都可以做到，ES6的类其实就是语法糖
+
+4. 浅拷贝和深拷贝
+- 浅拷贝
+  - 对象级别的数据只是把地址拷贝过去，新数据和旧数据指向内存同一地址
+  - 拷贝方法  
+	- 直接赋值
+    - Object.assign(o, obj); 把obj浅拷贝给o
+- 深拷贝
+  - 对象级别的数据在内存中开辟新空间，新数据和旧数据指向内存不同地址
+  - 拷贝方法 递归赋值
+
+## ES5中的新增方法
+### 数组方法
+1. 数组遍历
+- forEach()
+  - arr.forEach(function(value, index, array){})
+    - value: 每一个数组元素的值
+    - index：每一个数组元素的索引号
+    - array：数组本身
+	- 回调函数中return不会终止迭代
+  - 示例
+```
+arr.forEach(function(value, index, array){
+	sum += value;
+})
+```
+- map()
+2. 数组过滤
+- filter()
+  - filter方法创建一个新数组，数组中元素是通过检查指定数组中符合条件的所有元素
+  - array.filter(function(value, index, arr){})    
+	- 它直接返回一个新数组
+	- 遇到return不会终止迭代
+  - 示例
+```
+var newArr = array.filter(function(value, index, arr){
+	return value >= 20;
+})
+```		
+- some()
+  - 检测数组中有没有满足条件的元素，如果有返回true，否则返回false
+  - array.some(function(value, index, arr){})    
+    - 如果找到第一个满足条件的元素则终止循环
+    - 回调函数中遇到return true就会终止迭代
+  - 示例
+```
+var flag = array.some(function(value, index, arr){
+	return value >= 20;
+})
+```
+- every()
+
+### 字符串方法
+- trim()
+  - trim方法可以去除字符串两侧的空格
+  - var str1 = str.trim(); 
+    
+### 对象方法
+- defineProperty()
+  - 定义对象新属性或修改原有属性的值
+  - Object.defineProperty(obj, prop, descriptor)
+    - obj：对象
+    - prop：属性
+    - dexcriptor：说明，以对象形式{}书写
+      - value：属性值，默认undefined
+      - writable：值是否可以重写，默认false
+      - enumerable：目标属性是否可以被枚举，默认为false，即不允许遍历(bj.keys()取不到)
+      - configurable目标属性是否可以被删除或是否可以再次修改特性，默认false
+
+## 严格模式
+### 开启严格模式
+1. 整个脚本
+- 在脚本最上面写上'use strict';
+2. 某个函数
+```
+function fn(){
+	'use strict';
+	...
+}
+```
+### 严格模式中的变化
+1. 变量：
+- 变量必须先声明再使用
+- 不能随意删除已经声明好的变量 delete num
+2. this：
+- 全局作用域中的this是undefined，非严格模式是window
+- 如果构造函数不加new调用，this会报错
+- 定时器中this还是指向window
+3. 函数：
+- 不允许函数参数有重名情况
+- 不允许在函数代码块中声明函数
+
+## 函数进阶
+### 函数的定义
+- function fn(){}
+- var fn = function(){}
+- var f = new Function('参数1', '参数2', '函数体');
+- 所有函数都是Function的实例对象
+
+### 函数的调用
+1. 普通函数
+```
+function fn(){}
+fn();
+fn.call();
+```
+2. 对象的方法
+```
+var o = {
+	sayHi: function(){}
+}
+o.sayHi();
+```
+3. 构造函数
+```
+function Star(){}
+var ldh = new Star();
+```
+4. 绑定事件函数
+```
+btn.onclick = function(){}
+点击按钮调用
+```
+5. 定时器函数
+```
+setInterval(function(){}, 1000)
+定时器每隔1s调用一次
+```
+6. 立即执行函数
+```
+(function(){})()
+自动调用
+```
+
+### 函数中this指向问题
+1. 正常指向
+- 普通函数 指向window
+- 对象中函数 指向对象o
+- 构造函数
+  - 指向实例对象
+  - 构造函数原型对象中的函数中this也指向实例对象
+- 绑定事件函数 指向函数的调用者btn，即绑定事件的对象
+- 定时器函数 指向window
+- 立即执行函数 指向window
+2. 改变函数内部this指向
+- call方法
+  - fn.call(thisArg, arg1, arg2, ...)
+  - 主要应用：类继承
+- apply方法
+  - fn.apply(thisArg, [argArray])
+  - 调用函数，改变this指向
+  - 参数必须是数组
+  - 主要应用：借助Math内置对象求最大值
+```
+var arr = [1, 2, 3, 4, 5];
+var max = Math.max.apply(Math, arr);
+```
+- bind方法
+  - fn.bind(thisArg, arg1, arg2, ...);
+    - 不调用函数，只改变函数内部this的指向
+```
+var f = fn.bind(o, 1, 2);
+//需单独调用
+f();
+```
+	- 返回由指定的this值和初始化参数改造的原函数拷贝
+  - 典型应用：发送验证码按钮，将定时器函数中this指向btn
+```
+btn.onclick = function(){
+	this.disabled = true;
+	setTimeout(function(){
+		this.disabled = false;
+	}.bind(this), 3000)
+}
+```
+
+### 闭包和递归
+1. 高阶函数
+- 传递过来的参数是函数，或返回值是函数
+2. 闭包
+- 概念
+  - 某个作用域有权访问另一个函数作用域中变量，被访问变量所在作用域称为闭包，fn就是闭包
+  - 闭包的作用是延申了变量的作用范围
+```
+function fn(){
+	var num = 0;
+	function fun(){
+		console.log(num);
+	}
+	// fun();
+	return fun;
+}
+fn();
+var f = fn();
+f();
+```
+- 闭包的应用
+  - 立即执行函数也称为小闭包，因为立即执行函数中的任何一个函数都可以使用它的i变量
+```
+for(var i=0; i<lis.length; i++){
+	(function(i){
+		lis[i].onclick = function(){
+			console.log(i);
+		}
+	})(i);
+}
+```
+3. 递归
+- 自己调用自己的函数
+- 栈溢出 stack overflow
+  - 必须要加退出条件，利用return语句退出
+- 利用递归求阶乘
+```
+function fn(n){
+	if(n == 1){
+		return 1;
+	}
+	return n * fn(n-1);
+}
+fn(100);
+```
+- 利用递归求斐波那契数列
+```
+function fn(n){
+	if(n == 1){
+		return 1;
+	}
+	return fn(n-1)+fn(n-2);
+}
+fn(100);
+```	
+
+## 正则表达式
+### 创建
+1. var regexp = new RegExp(/123/);
+2. var regexp = /123/;
+
+### 测试
+- regexObj.test(str);
+  - 只要包含str就符合
+  - 符合返回true，不符合返回false
+
+### 特殊字符(元字符)
+1. 边界符
+- ^abc                     以abc开头
+- abc$                     以abc结尾
+- ^abc$                    只有'abc'才匹配
+2. 字符类                       
+- [abc]                    a、b、c出现任意一个就匹配
+- [a-z]                    任意一个小写字母
+- [A-Z]                    任意一个大写字母
+- [0-9]                    任意一个数字
+- [a-zA-Z0-9_-]            判断用户名
+- [^a-z]                   不能包含小写字母
+3. 量词符                       
+- *                        0~n次
+- +                        1~n次
+- ?                        0、1次
+- {n}                      n次
+- {n,}                     大于等于n次
+- {m,n}                    大于等于m次小于等于n次,中间不能有空格
+- ^[a-zA-Z0-9_-]{6,16}$    判断用户名
+4. 预定义类
+- \d                       [0-9]数字
+- \D                       [^0-9]非数字
+- \w                       [a-zA-Z0-9_]字母数字下划线
+- \W                       [^a-zA-Z0-9_]
+- \s                       [\t\r\n\v\f]空格、换行符、制表符
+- \S                       [^\t\r\n\v\f]
+5. 或符号 |
+- var reg = /^\d{3}-\d{8}|\d{4}-\d{7}$/
+
+### 括号总结
+1. 中括号                  字符集合，匹配方括号中的任意字符
+2. 大括号                  量词符，里面表示重复次数
+3. 小括号                  表示优先级
+
+### 正则替换
+- newStr = stringObject.replace(regEx, 替换文本);
+  - 如果正则表达式不加参数，只替换第一个
+  - 正则表达式参数
+    - g                   全局匹配    /123/g
+    - i                   忽略大小写  /123/i
+    - gi                  全局匹配且忽略大小写    /123/gi
+
+# ES6语法
+## 变量声明
+### let声明
+1. 特点
+- 声明的变量具有块级作用域，var声明的变量只有全局和局部作用域，可以防止循环变量变成全局变量
+- 不存在变量提升
+- 暂时性死区
+  - 这段代码会报错，因为if语句中的num用let声明，与外面的num没有关系，先使用再声明所以报错
+```
+var num = 10;
+if(true){
+	console.log(num);
+	let num = 20;
+}
+```
+2. 经典面试题
+- for循环每次执行循环都会创建一个块级作用域，两个函数分别属于两个作用域，这两个作用域中i分别是0和1，全局作用域中i的值是2，如果使用var声明i函数调用时往上找会找到全局作用域中的i，用let声明会找到块级作用域中的i
+```
+var arr = [];
+for(let i=0; i<2; i++){
+	arr[i] = function(){
+		console.log(i);
+	}
+}
+arr[0]();
+arr[1]();
+//输出为0，1
+var arr = [];
+for(var i=0; i<2; i++){
+	arr[i] = function(){
+		console.log(i);
+	}
+}
+arr[0]();
+arr[1]();
+//输出为2，2
+```
+### const声明
+1. 特点
+- 具有块级作用域
+- 不存在变量提升
+- 声明的同时必须赋初始值
+- 基本数据类型(数字、字符串)，值不可更改
+- 复杂数据类型(数组，对象)，地址不可更改，内部成员的值可以更改
+
+##解构赋值
+### 数组解构
+```
+let ary = [1, 2, 3];
+let [a, b, c, d, e] = ary;
+let ary1 = [1, 2, 3, 4, 5, 6];
+let [a1, b1, c1, d1, e1] = ary1;
+//d, e是undefined
+//a1, b1, c1, d1, e1是1, 2, 3, 4, 5
+```
+### 对象结构
+- 使用变量的名字匹配对象的属性，匹配成功将对象属性的值赋给变量
+```
+let obj = {name:'ldh', age:18, sing:function(){console.log('冰雨')}};
+let {name, age, sing} = obj;
+let {name:myName, age:myAge, sing:iSing} = obj;
+	设置别名，这种情况下对象的值传给myName...
+```
+## 箭头函数
+1. 目的	
+- 简化函数定义语法 const fn = () => {}
+2. 特点
+- 函数体中只有一句话且代码的执行结果就是返回值，可以省略大括号和return
+```
+	const sum = (n1, n2) => {
+		return n1 + n2;
+	}
+可以简化为
+	const sum = (n1, n2) => n1 + n2;
+```
+- 如果形参只有一个，可以省略小括号
+```
+	const fn = (v) => {
+		console.log(v);
+	}
+可以简化为
+	const fn = v => {
+		console.log(v);
+	}
+```
+- 箭头函数中this，指向定义位置的this，而不是谁调用指向谁
+3. 面试题
+- 输出100，对象不产生作用域，所以定义在对象中的箭头函数相当于定义在全局作用域，其中的this指向window
+```
+var age = 100;
+var ob = {
+	age: 20,
+	say: () => {
+		alert(this.age);
+	}
+}
+ob.say();
+```	
+## 剩余参数
+1. 在形参中填入para0, ...args，当传入的实参个数大于形参的个数时，后面几个参数会作为数组元素传入arg中
+```
+const sum2 = (...args) => {
+	let total = 0;
+	args.forEach(value => total += value);
+	return total;
+};
+console.log(sum2(10, 20));
+console.log(sum2(10, 20, 30));
+```
+2. 剩余参数和数组解构配合使用
+```
+let ary1 = ['zhangsan', 'lisi', 'wangwu'];
+let [s1, ...s2] = ary1;
+console.log(s1);
+console.log(s2);
+```
+
+## 内置对象扩展方法
+### Array的扩展方法
+1. 扩展运算符...
+- 可以将数组或对象转为逗号分隔的参数序列
+```
+let ary = [1, 2, 3];
+console.log(...ary);
+输出1, 2, 3
+```
+- 合并数组
+```
+let ary2 = [1, 2, 3];
+let ary3 = [4, 5, 6];
+let ary4 = [...ary2, ...ary3];
+ary2.push(...ary4);
+console.log(ary4);
+console.log(ary2);
+```
+- 将类数组或可遍历对象转换为真正的数组
+```
+let oDivs = document.getElementsByTagName('div');
+ary = [...oDivs];
+```
+2. 构造函数方法Array.from
+- 将类数组或可遍历对象转换为真正的数组
+- 第二个参数可以传入一个回调函数对数组元素进行一定的操作
+```
+var ary6 = Array.from(arrayLike, item => item * 2);
+console.log(ary6);
+console.log(arrayLike);
+```		
+3. find方法
+- let target = ary.find((item, index) => item.id == 2);
+  - 在ary中查找第一个id值为2的元素，返回该元素
+  - 形参如果不用也可以省略，`let target = ary.find(item => item.id == 2);`
+  - 如果查不到返回undefined
+
+4. findIndex方法
+- let index = ary.findIndex((value, index) => value > 9);
+  - 在ary中查找第一个值大于9的元素，返回其索引
+  - 如果查不到返回-1
+
+5. indludes方法
+- ary.includes(value)
+  - 判断数组中是否包含value元素，包含返回true，不包含返回false
+
+### String的扩展方法
+1. 模板字符串``
+- 其中可以解析变量
+```
+let name = 'zhangsan';
+let sayHello = `hello,my name is ${name}`;
+```
+- 其中可以换行
+```
+let result = {
+	name: 'zhangsan',
+	age: 20,
+	sex: 'male'
+}
+let html = `<div>
+	<span>${result.name}</span>
+	<span>{result.age}</span>
+	<span>{result.sex}</span>
+</div>`
+```
+- 其中可以调用函数
+```
+const fn = () => {
+	return '我是fn函数';
+}
+let html = `我是模板字符串 ${fn()}`;
+```
+2. startsWith方法
+- str.startsWith('hello')
+  - 判断str是否以hello开头，是返回true，不是返回false
+3. endsWith方法
+- str.endsWith('hello')
+  - 判断str是否以hello结尾，是返回true，不是返回false
+4. repeat方法
+- str.repeat(num)
+  - 将str重复num次返回一个新字符串
+
+## Set数据结构
+1. 类似于数组，但是成员值是唯一的，没有重复的值
+2. 本身是一个构造函数，用于生成Set数据结构
+```
+const s1 = new Set();
+const s2 = new Set([1, 2, 3, 4, 4]);
+console.log(s1.size);    输出0
+console.log(s2.size);    输出4
+ary = [...s2];
+console.log(ary);
+```
+3. 常用方法
+- add
+  - 添加元素，返回Set结构本身
+  - s.add(1).add(2).add(3);
+- delete
+  - 删除元素，删除成功返回true，失败返回false
+  - s.delete(3);
+- has
+  - 返回该值是否属于Set的成员，属于返回true
+  - s.has(1);
+- clear
+  - 清除所有成员，没有返回值
+  - s.clear();
+4. 遍历
+- s.forEach(value => {console.log.log(value)})
+
+## 类
+### 类的创建
+- class 类名{}
+```
+class Star{
+	
+}
+var ldh = new Star();
+```
+### constructor构造函数添加共有属性
+- constructor是类的构造函数，用于传递参数、返回实例对象
+- new生成对象实例时自动调用
+- 如果没有显示定义，类内部会自动创建
+```
+class Star{
+	constructor(uname, age){
+		this.uname = uname;
+		this.age = age;
+	}
+}
+var ldh = new Star('刘德华', 20);
+```
+### 添加共有方法
+- 类里面所有函数不需要写function
+- 多个函数之间不能加逗号
+```
+class Star{
+	constructor(uname, age){
+		this.uname = uname;
+		this.age = age;
+	}
+	sing(song){
+		console.log(song);
+	}
+}
+var ldh = new Star('刘德华', 20);
+ldh.sing('冰雨');
+```
+### 类的继承
+1. extends使子类继承父类的方法
+2. super可以调用父类的constructor函数，使子类的参数可以传递给父类的构造函数
+3. 子类constructor函数中，必须先写super后写this
+4. super也可以调用父类的普通函数，super.fn()
+```
+class Father{
+	constructor(x, y){
+		this.x = x;
+		this.y = y;
+	}
+	sum(){
+		console.log(this.x + this.y);
+	}
+	money(){
+		console.log(100);
+	}
+	say(){
+		return '我是爸爸';
+	}
+}
+class Son extends Father{
+	constructor(x, y){
+		super(x, y);
+		this.x = x;
+		this.y = y;
+	}
+	say(){
+		console.log(super.say() + '的儿子');
+	}
+	subtract(){
+		console.log(this.x - this.y);
+	}
+}
+var son = new Son(4, 3);
+son.money();
+son.say();
+son.sum();
+son.substract();
+```
+### 注意
+1. es6中没有变量提升，必须先定义类后实例化
+2. 类里面共有的属性和方法一定要加this使用`this.uname`
+3. 类里的this指向问题
+- constructor里面的this指向创建的实例
+- 普通函数中的this大部分情况指向创建的实例(ldh)，少部分情况下指向其他对象(ldh.btn)，遵循谁调用指向谁的原则
+```
+class Star{
+	constructor(uname, age){
+		this.uname = uname;
+		this.age = age;
+		this.btn = document.querySelector('button');
+		this.btn.onclick = this.sing;
+	}
+	sing(){
+		console.log(this.uname);
+	}
+}
+var ldh = new Star('刘德华', 20);
+ldh.sing();
+```
 # 查阅文档
 - MDN：https://developer.mozilla.org/zh-CN/
 - WebAPI：浏览器API，DOM和BOM https://developer.mozilla.org/zh-CN/docs/Web/API
+- 菜鸟工具：https://c.runoob.com/

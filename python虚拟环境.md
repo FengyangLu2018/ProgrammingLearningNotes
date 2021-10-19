@@ -34,8 +34,9 @@
 ```bash
 (Linux)
 pip install virtualenvwrapper
-export WORKON_HOME=~/Envs
+export WORKON_HOME=~/Envs #指定创建的环境存放的目录
 source /usr/local/bin/virtualenvwrapper.sh
+source ~/.bashrc　　　　#读入配置文件，立即生效
 (Windows)
 pip install virtualenvwrapper-win
 WORKON_HOME 默认值是 %USERPROFILE%Envs
@@ -57,4 +58,4 @@ WORKON_HOME 默认值是 %USERPROFILE%Envs
 - `cpvirtualenv [source] [dest]` 复制一份虚拟环境
 - `allvirtualenv` 对当前虚拟环境执行统一的命令
 - `add2virtualenv [dir] [dir]` 把指定的目录加入当前使用的环境的path中，这常使用于在多个project里面同时使用一个较大的库的情况
-- `toggleglobalsitepackages -q` 控制当前的环境是否使用全局的sitepackages目录
+- `toggleglobalsitepackages` 控制当前的环境是否使用全局的sitepackages目录
